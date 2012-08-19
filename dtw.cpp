@@ -236,8 +236,6 @@ int main(int argc , char *argv[])
     steps++;
   }
   wedge(Q,Q, m, r, l, u);
-  printarray(l,m);
-  printarray(u,m);
 
   fclose(qp);
 
@@ -279,7 +277,7 @@ int main(int argc , char *argv[])
   int rot = -1;
 
   fp = fopen(argv[1],"r");
-  while(fscanf(fp,"%lf",&d) != EOF && i < 10000)
+  while(fscanf(fp,"%lf",&d) != EOF && i < 500)
   {
     ex += d;
     ex2 += d*d;
@@ -316,17 +314,16 @@ int main(int argc , char *argv[])
   fclose(fp);
   char end1 = '\n';
   double t2 = clock();
-  cout << "Rotation: " << rot << endl;
-  cout << "[ ";
-  for (int a = 0;a < m; a++) {
-    printf("%g ", C[rot][a]*qstd+qmean);
+  if (rot != -1) {
+    cout << "Rotation: " << rot << endl;
+    cout << "Location : " << loc << endl;
+    cout << "Distance : " << sqrt(bsf) << endl;
+    cout << "Data Scanned : " << i << endl;
+    cout << "Num Steps: " << steps << endl;
+    cout << "Total Execution Time : " << (t2-t1)/CLOCKS_PER_SEC << " sec" << endl;
+  } else {
+    cout << "No match found\n";
   }
-  cout << "]\n";
-  cout << "Location : " << loc << endl;
-  cout << "Distance : " << sqrt(bsf) << endl;
-  cout << "Data Scanned : " << i << endl;
-  cout << "Num Steps: " << steps << endl;
-  cout << "Total Execution Time : " << (t2-t1)/CLOCKS_PER_SEC << " sec" << endl;
 
   free(T);
   free(tz);
