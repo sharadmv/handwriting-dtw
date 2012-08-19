@@ -1,2 +1,2 @@
 All:
-	g++ test.cpp -ggdb -o bin/test
+	g++ dtw.cpp -ggdb -o bin/test
