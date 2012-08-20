@@ -194,7 +194,7 @@ double keogh(double *t, double *u, double *l, int j, int len, double mean, doubl
   return lb;
 }
 
-double keoghData(double *tz, double *q, double *cb, double *l, double *u, int len, double mean, double std, double bsf)
+double keoghData(double *tz, double *q,  double *l, double *u, int len, double mean, double std, double bsf)
 {
   double lb = 0;
   double uu,ll,d;
@@ -210,7 +210,7 @@ double keoghData(double *tz, double *q, double *cb, double *l, double *u, int le
       }
     }
     lb += d;
-    cb[i] = d;
+    //cb[i] = d;
   }
   return lb;
 }
@@ -285,7 +285,10 @@ int main(int argc , char *argv[])
   if (r == 0) {
     r = 1;
   }
-  int rotationframe = floor(0.5*m);
+  int rotationframe = floor(0.05*m);
+  if (rotationframe == 0) {
+    rotationframe = 1;
+  }
   cout << "Number of rotation frames: " << 2*rotationframe + 1 << " (" << rotationframe << " on each side)\n";
   C = (double **)malloc(sizeof(double*)*(2*rotationframe+1));
   double d;
@@ -293,6 +296,9 @@ int main(int argc , char *argv[])
   int steps = 0;
 
   int numkim = 0;
+  int numlb1 = 0;
+  int numlb2 = 0;
+  int numdtw = 0;
 
   while(fscanf(qp,"%lf",&d) != EOF && i < m)
   {
@@ -346,49 +352,66 @@ int main(int argc , char *argv[])
   fp = fopen(argv[1],"r");
   double* uo = (double *)malloc(sizeof(double)*m);
   double* lo = (double *)malloc(sizeof(double)*m);
-  while(fscanf(fp,"%lf",&d) != EOF && i < 500)
+  double* ubuffer = (double *)malloc(sizeof(double)*1000000);
+  double* lbuffer = (double *)malloc(sizeof(double)*1000000);
+  int length=0;
+  double* buffer = (double *)malloc(sizeof(double)*1000000);
+  while(fscanf(fp,"%lf",&d) != EOF && length <= 5000)
   {
+    buffer[length] = d;
+    steps++;
+    length++;
+  }
+  wedge(buffer,buffer, length, r, lbuffer, ubuffer);
+  for (i=0;i<length;i++) {
+    d = buffer[i];
+
     ex += d;
     ex2 += d*d;
     T[i%m] = d;
     T[(i%m)+m] = d;
-    steps++;
-
-    if( i >= m-1 )
-    {
+    if(i >= m-1) {
       j = (i+1)%m;
+      int I = i-(m-1);
 
       mean = ex/m;
       std = ex2/m;
       std = sqrt(std-mean*mean);
-      for(k=0;k<m;k++) {   
-        tz[k] = (T[k+j] - mean)/std;
-        steps++;
-      }
       for (int ro = 0; ro < 2*rotationframe+1; ro++) {
         double lbkim = kim(T, C[ro],j, m, mean, std, bsf);
-        wedge(C[ro],C[ro], m, r, lo, uo);
-        double lbkeogh= keogh(T, uo, lo, j, m, mean, std, bsf);
         if (lbkim < bsf) {
+          wedge(C[ro],C[ro], m, r, lo, uo);
+          double lbkeogh= keogh(T, uo, lo, j, m, mean, std, bsf);
           if (lbkeogh < bsf) {
-          dist = dtw(C[ro],tz,m,r, bsf, &steps);
-            if(dist < bsf) {
-              rot = rotationframe;
-              bsf = dist;
-              loc = i-m+1;
+            for(k=0;k<m;k++) {   
+              tz[k] = (T[k+j] - mean)/std;
+              steps++;
             }
+            double lbkeogh2 = keoghData(tz, C[ro], lbuffer+I, ubuffer+I, m, mean, std, bsf);
+            if (lbkeogh2 < bsf) {
+              dist = dtw(C[ro],tz,m,r, bsf, &steps);
+              if(dist < bsf) {
+                rot = rotationframe;
+                bsf = dist;
+                loc = i-m+1;
+              }
+              numdtw++;
+            } else {
+              numlb2++;
+            }
+          } else {
+            numlb1++;
           }
         } else {
           numkim++;
         }
-        
+
         steps++;
       }
 
       ex -= T[j];
       ex2 -= T[j]*T[j];
     }
-    i++;
   }
   free(uo);
   free(lo);
@@ -397,16 +420,16 @@ int main(int argc , char *argv[])
   double t2 = clock();
   if (rot != -1) {
     cout << "Rotation: " << rot << endl;
-    cout << "[ ";
-    for (int a = 0;a < m; a++) {
-      printf("%g ", C[rot][a]*qstd+qmean);
-    }
-    cout << "]\n";
     cout << "Location : " << loc << endl;
     cout << "Distance : " << sqrt(bsf) << endl;
     cout << "Data Scanned : " << i << endl;
     cout << "Num Steps: " << steps << endl;
     cout << "Total Execution Time : " << (t2-t1)/CLOCKS_PER_SEC << " sec" << endl;
+    cout << "--------------------------" << endl;
+    cout << "Kim: " << numkim << endl;
+    cout << "Keogh1: " << numlb1 << endl;
+    cout << "Keogh2: " << numlb2<< endl;
+    cout << "DTW: " << numdtw << endl;
   } else {
     cout << "No match found\n";
   }
@@ -414,6 +437,7 @@ int main(int argc , char *argv[])
   free(T);
   free(tz);
   free(C);
+  free(buffer);
   return 0;
 }
 
