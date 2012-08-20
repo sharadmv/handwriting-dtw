@@ -87,6 +87,7 @@ void wedge(double *t, double *t2, int len, int r, double *l, double *u) {
 
   struct deque du, dl;
 
+
   init(&du, 2*r+2);
   init(&dl, 2*r+2);
 
@@ -179,7 +180,6 @@ double keogh(double *t, double *u, double *l, int j, int len, double mean, doubl
   double lb = 0;
   double x, d;
 
-  printarray(t,2*len);
   for (int i = 0; i < len && lb < bsf; i++)
   {
     x = (t[i+j] - mean) / std;
@@ -365,13 +365,13 @@ int main(int argc , char *argv[])
         tz[k] = (T[k+j] - mean)/std;
         steps++;
       }
-      for (int r = 0; r < 2*rotationframe+1; r++) {
-        double lbkim = kim(T, C[r],j, m, mean, std, bsf);
-        wedge(C[r],C[r], m, r, lo, uo);
-        double lbkeogh = keogh(T, uo, lo, j, m, mean, std, bsf);
+      for (int ro = 0; ro < 2*rotationframe+1; ro++) {
+        double lbkim = kim(T, C[ro],j, m, mean, std, bsf);
+        wedge(C[ro],C[ro], m, r, lo, uo);
+        double lbkeogh= keogh(T, uo, lo, j, m, mean, std, bsf);
         if (lbkim < bsf) {
           if (lbkeogh < bsf) {
-          dist = dtw(C[r],tz,m,r, bsf, &steps);
+          dist = dtw(C[ro],tz,m,r, bsf, &steps);
             if(dist < bsf) {
               rot = rotationframe;
               bsf = dist;
