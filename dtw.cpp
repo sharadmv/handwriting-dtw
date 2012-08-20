@@ -132,11 +132,54 @@ void wedge(double *t, double *t2, int len, int r, double *l, double *u) {
   destroy(&dl);
 }
 
-double keogh(double *t, double *u, double *l, double *cb, int j, int len, double mean, double std, double bsf)
-{
+double kim(double *t, double *q, int j, int len, double mean, double std, double bsf) {
+
+  /// 1 point at front and back
+  double d, lb;
+  double x0 = (t[j] - mean) / std;
+  double y0 = (t[(len-1+j)] - mean) / std;
+  lb = dist(x0,q[0]) + dist(y0,q[len-1]);
+  if (lb >= bsf)   return lb;
+
+  /// 2 points at front
+  double x1 = (t[(j+1)] - mean) / std;
+  d = min(dist(x1,q[0]), dist(x0,q[1]));
+  d = min(d, dist(x1,q[1]));
+  lb += d;
+  if (lb >= bsf)   return lb;
+
+  /// 2 points at back
+  double y1 = (t[(len-2+j)] - mean) / std;
+  d = min(dist(y1,q[len-1]), dist(y0, q[len-2]) );
+  d = min(d, dist(y1,q[len-2]));
+  lb += d;
+  if (lb >= bsf)   return lb;
+
+  /// 3 points at front
+  double x2 = (t[(j+2)] - mean) / std;
+  d = min(dist(x0,q[2]), dist(x1, q[2]));
+  d = min(d, dist(x2,q[2]));
+  d = min(d, dist(x2,q[1]));
+  d = min(d, dist(x2,q[0]));
+  lb += d;
+  if (lb >= bsf)   return lb;
+
+  /// 3 points at back
+  double y2 = (t[(len-3+j)] - mean) / std;
+  d = min(dist(y0,q[len-3]), dist(y1, q[len-3]));
+  d = min(d, dist(y2,q[len-3]));
+  d = min(d, dist(y2,q[len-2]));
+  d = min(d, dist(y2,q[len-1]));
+  lb += d;
+
+  return lb;
+}
+
+double keogh(double *t, double *u, double *l, int j, int len, double mean, double std, double bsf) {
   double lb = 0;
   double x, d;
 
+  printarray(t,2*len);
   for (int i = 0; i < len && lb < bsf; i++)
   {
     x = (t[i+j] - mean) / std;
@@ -145,6 +188,27 @@ double keogh(double *t, double *u, double *l, double *cb, int j, int len, double
       d = dist(x,u[i]);
     else if(x < l[i])
       d = dist(x,l[i]);
+    lb += d;
+    //cb[i] = d;
+  }
+  return lb;
+}
+
+double keoghData(double *tz, double *q, double *cb, double *l, double *u, int len, double mean, double std, double bsf)
+{
+  double lb = 0;
+  double uu,ll,d;
+  for (int i = 0; i < len && lb < bsf; i++) {
+    uu = (u[i]-mean)/std;
+    ll = (l[i]-mean)/std;
+    d = 0;
+    if (q[i] > uu) {
+      d = dist(q[i], uu);
+    } else {   
+      if (q[i] < ll) {
+        d = dist(q[i], ll);
+      }
+    }
     lb += d;
     cb[i] = d;
   }
@@ -216,16 +280,19 @@ int main(int argc , char *argv[])
 
   qp = fopen(argv[2],"r");
   Q = (double *)malloc(sizeof(double)*m);
-  u = (double *)malloc(sizeof(double)*m);
-  l = (double *)malloc(sizeof(double)*m);
   T = (double *)malloc(sizeof(double)*m);
   int r = floor(0.05*m);
-  int rotationframe = floor(0.05*m);
-  cout << "Number of rotation frames: " << rotationframe << "\n";
+  if (r == 0) {
+    r = 1;
+  }
+  int rotationframe = floor(0.5*m);
+  cout << "Number of rotation frames: " << 2*rotationframe + 1 << " (" << rotationframe << " on each side)\n";
   C = (double **)malloc(sizeof(double*)*(2*rotationframe+1));
   double d;
   double ex = 0, ex2 = 0;
   int steps = 0;
+
+  int numkim = 0;
 
   while(fscanf(qp,"%lf",&d) != EOF && i < m)
   {
@@ -235,7 +302,6 @@ int main(int argc , char *argv[])
     i++;
     steps++;
   }
-  wedge(Q,Q, m, r, l, u);
 
   fclose(qp);
 
@@ -272,11 +338,14 @@ int main(int argc , char *argv[])
   j = 0;
   int k = 0;
   ex = ex2 = 0;
-  double threshold = 36;
+  double threshold = INF;
+  double lbkim = 0;
   double bsf = threshold;
   int rot = -1;
 
   fp = fopen(argv[1],"r");
+  double* uo = (double *)malloc(sizeof(double)*m);
+  double* lo = (double *)malloc(sizeof(double)*m);
   while(fscanf(fp,"%lf",&d) != EOF && i < 500)
   {
     ex += d;
@@ -297,12 +366,22 @@ int main(int argc , char *argv[])
         steps++;
       }
       for (int r = 0; r < 2*rotationframe+1; r++) {
-        dist = dtw(C[r],tz,m,r, bsf, &steps);
-        if(dist < bsf) {
-          rot = r;
-          bsf = dist;
-          loc = i-m+1;
+        double lbkim = kim(T, C[r],j, m, mean, std, bsf);
+        wedge(C[r],C[r], m, r, lo, uo);
+        double lbkeogh = keogh(T, uo, lo, j, m, mean, std, bsf);
+        if (lbkim < bsf) {
+          if (lbkeogh < bsf) {
+          dist = dtw(C[r],tz,m,r, bsf, &steps);
+            if(dist < bsf) {
+              rot = rotationframe;
+              bsf = dist;
+              loc = i-m+1;
+            }
+          }
+        } else {
+          numkim++;
         }
+        
         steps++;
       }
 
@@ -311,11 +390,18 @@ int main(int argc , char *argv[])
     }
     i++;
   }
+  free(uo);
+  free(lo);
   fclose(fp);
   char end1 = '\n';
   double t2 = clock();
   if (rot != -1) {
     cout << "Rotation: " << rot << endl;
+    cout << "[ ";
+    for (int a = 0;a < m; a++) {
+      printf("%g ", C[rot][a]*qstd+qmean);
+    }
+    cout << "]\n";
     cout << "Location : " << loc << endl;
     cout << "Distance : " << sqrt(bsf) << endl;
     cout << "Data Scanned : " << i << endl;
