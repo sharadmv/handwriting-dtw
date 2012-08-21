@@ -314,9 +314,9 @@ int main(int argc , char *argv[])
     r = floor(R*m);
   else
     r = floor(R);
-  int rotationframe = 0;// floor(0.05*m);
+  int rotationframe = floor(0.05*m);
   if (rotationframe == 0) {
-    rotationframe = 0;
+    rotationframe = 1;
   }
   cout << "Number of rotation frames: " << 2*rotationframe + 1 << " (" << rotationframe << " on each side)\n";
   C = (double **)malloc(sizeof(double*)*(2*rotationframe+1));
@@ -504,6 +504,16 @@ int main(int argc , char *argv[])
   double t2 = clock();
   if (rot != -1) {
     cout << "Rotation: " << rot << endl;
+    cout << "[ ";
+    for (int a = 0;a < m; a++) {
+      printf("%g ", C[rot][a]*qstd+qmean);
+    }
+    cout << "]\n";
+    cout << "[ ";
+    for (int a = loc;a < loc+m; a++) {
+      printf("%g ", buffer[a]);
+    }
+    cout << "]\n";
     cout << "Location : " << loc << endl;
     cout << "Distance : " << sqrt(bsf) << endl;
     cout << "Data Scanned : " << i << endl;
