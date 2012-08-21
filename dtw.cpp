@@ -18,6 +18,26 @@ void printarray (double *arr, int len) {
   }
   cout << "]\n";
 }
+void printarray (int *arr, int len) {
+  cout << "[ ";
+  for (int a = 0;a < len; a++) {
+    printf("%d ", arr[a]);
+  }
+  cout << "]\n";
+}
+
+/// Data structure for sorting the query
+typedef struct Index
+{   double value;
+  int    index;
+} Index;
+
+/// Sorting function for the query, sort by abs(z_norm(q[i])) from high to low
+int comp(const void *a, const void* b)
+{   Index* x = (Index*)a;
+  Index* y = (Index*)b;
+  return abs(y->value) - abs(x->value);   // high to low
+}
 
 struct deque
 {   int *dq;
@@ -176,31 +196,31 @@ double kim(double *t, double *q, int j, int len, double mean, double std, double
   return lb;
 }
 
-double keogh(double *t, double *u, double *l, int j, int len, double mean, double std, double bsf) {
+double keogh(int *order, double *t, double *u, double *l,double *cb, int j, int len, double mean, double std, double bsf) {
   double lb = 0;
   double x, d;
 
   for (int i = 0; i < len && lb < bsf; i++)
   {
-    x = (t[i+j] - mean) / std;
+    x = (t[order[i]+j] - mean) / std;
     d = 0;
-    if (x > u[i])
-      d = dist(x,u[i]);
-    else if(x < l[i])
-      d = dist(x,l[i]);
+    if (x > u[order[i]])
+      d = dist(x,u[order[i]]);
+    else if(x < l[order[i]])
+      d = dist(x,l[order[i]]);
     lb += d;
-    //cb[i] = d;
+    cb[order[i]] = d;
   }
   return lb;
 }
 
-double keoghData(double *tz, double *q,  double *l, double *u, int len, double mean, double std, double bsf)
+double keoghData(int *order, double *tz, double *q,  double *l, double *u, double *cb, int len, double mean, double std, double bsf)
 {
   double lb = 0;
   double uu,ll,d;
   for (int i = 0; i < len && lb < bsf; i++) {
-    uu = (u[i]-mean)/std;
-    ll = (l[i]-mean)/std;
+    uu = (u[order[i]]-mean)/std;
+    ll = (l[order[i]]-mean)/std;
     d = 0;
     if (q[i] > uu) {
       d = dist(q[i], uu);
@@ -210,14 +230,15 @@ double keoghData(double *tz, double *q,  double *l, double *u, int len, double m
       }
     }
     lb += d;
-    //cb[i] = d;
+    cb[order[i]] = d;
   }
   return lb;
 }
 
-double dtw(double* q, double* d, int m, int r, double bsf, int* steps) {
-  int wl = 2*r+1;//(2*r)+1;
+double dtw(double* q, double* d, double *cb, int m, int r, double bsf, int* steps) {
+  int wl = 2*r+1;
   double *prev = (double *)malloc(sizeof(double)*(wl));
+
   double *curr = (double *)malloc(sizeof(double)*(wl));
   double *temp;
   for (int i = 0;i < wl; i++) {
@@ -226,13 +247,15 @@ double dtw(double* q, double* d, int m, int r, double bsf, int* steps) {
   }
   int i,j,k; 
   double x,y,z;
+  double best;
   for (i = 0; i < m; i++) {
     k = max(0,r-i);
-    double best = INF;
+    best = INF;
     for(j=max(0,i-r); j<=min(m-1,i+r); j++, k++) {
       if ((i==0)&&(j==0))
       {
         curr[k]=dist(q[0],d[0]);
+        best = curr[k];
         continue;
       }
       if ((j-1<0)||(k-1<0)) {
@@ -252,10 +275,10 @@ double dtw(double* q, double* d, int m, int r, double bsf, int* steps) {
       curr[k] = cost;
       *steps = *steps + 1;
     }
-    if (i+r>m-1 && best >= bsf) {
+    if (i+r < m-1 && best /*+cb[i+r+1]*/ >= bsf) {
       free(curr);
       free(prev);
-      return best;
+      return best/*+cb[i+r+1]*/;
     }
     temp = curr;
     curr = prev;
@@ -270,7 +293,7 @@ double dtw(double* q, double* d, int m, int r, double bsf, int* steps) {
 int main(int argc , char *argv[])
 {
 
-  double *Q, *T,*u,*l, **C;
+  double *Q, *q, *T,**C, **co;
   FILE *fp;
   FILE *qp;
   int m = atol(argv[3]);
@@ -280,17 +303,21 @@ int main(int argc , char *argv[])
 
   qp = fopen(argv[2],"r");
   Q = (double *)malloc(sizeof(double)*m);
+  q = (double *)malloc(sizeof(double)*m);
   T = (double *)malloc(sizeof(double)*m);
-  int r = floor(0.05*m);
-  if (r == 0) {
-    r = 1;
-  }
-  int rotationframe = floor(0.05*m);
+  int r;
+  double R = atof(argv[4]);
+  if (R<=1)
+    r = floor(R*m);
+  else
+    r = floor(R);
+  int rotationframe = 0;// floor(0.05*m);
   if (rotationframe == 0) {
-    rotationframe = 1;
+    rotationframe = 0;
   }
   cout << "Number of rotation frames: " << 2*rotationframe + 1 << " (" << rotationframe << " on each side)\n";
   C = (double **)malloc(sizeof(double*)*(2*rotationframe+1));
+  co = (double **)malloc(sizeof(double*)*(2*rotationframe+1));
   double d;
   double ex = 0, ex2 = 0;
   int steps = 0;
@@ -299,6 +326,7 @@ int main(int argc , char *argv[])
   int numlb1 = 0;
   int numlb2 = 0;
   int numdtw = 0;
+  int **order = (int **)malloc(sizeof(int)*(2*rotationframe+1));
 
   while(fscanf(qp,"%lf",&d) != EOF && i < m)
   {
@@ -316,21 +344,63 @@ int main(int argc , char *argv[])
   double mean;
   double std;
   qstd = sqrt(qstd-qmean*qmean);
+
+  double** uo = (double **)malloc(sizeof(double)*(2*rotationframe+1));
+  double** lo = (double **)malloc(sizeof(double)*(2*rotationframe+1));
+  double** cb = (double **)malloc(sizeof(double)*(2*rotationframe+1));
+
+  double** cb1 = (double **)malloc(sizeof(double)*(2*rotationframe+1));
+
+  double** cb2 = (double **)malloc(sizeof(double)*(2*rotationframe+1));
+
+  for(i = 0 ; i < m ; i++) {
+    q[i] = (Q[i] - qmean)/qstd;
+  }
+
+  double* u = (double *)malloc(sizeof(double)*m);
+  double* l = (double *)malloc(sizeof(double)*m);
+  wedge(q, q, m, r, l, u);
+  Index *Q_tmp;
+  Q_tmp = (Index *)malloc(sizeof(Index)*m);
+  /// Sort the query one time by abs(z-norm(q[i]))
+  for(i = 0; i<m; i++)
+  {
+    Q_tmp[i].value = q[i];
+    Q_tmp[i].index = i;
+  }
+  
+  qsort(Q_tmp, m, sizeof(Index),comp);
   for (int b = 0; b < 2*rotationframe+1; b++) {
     C[b] = (double *) malloc(sizeof(double)*m);
+    co[b] = (double *) malloc(sizeof(double)*m);
+    uo[b] = (double *) malloc(sizeof(double)*m);
+    lo[b] = (double *) malloc(sizeof(double)*m);
+    cb[b] = (double *) malloc(sizeof(double)*m);
+    cb1[b] = (double *) malloc(sizeof(double)*m);
+    cb2[b] = (double *) malloc(sizeof(double)*m);
+    order[b] = (int *) malloc(sizeof(double)*m);
   }
-  for(i = 0;i < m;i++) {
-    double znorm = (Q[i] - qmean)/qstd;
-    for (int w = -rotationframe, v = 0; w <= rotationframe; w++, v++) {
+  for (int w = -rotationframe, v = 0; w <= rotationframe; w++, v++) {
+    for(i = 0;i < m;i++) {
+      double znorm = (Q[i] - qmean)/qstd;
       int offset = (w+i)%m;
       if (offset < 0) {
         offset += m;
       }
       C[v][offset] = znorm;
+      int o = Q_tmp[i].index;
+      order[v][offset] = o;
+      co[v][offset] = q[o];
+      uo[v][offset] = u[o];
+      lo[v][offset] = l[o];
+      cb[v][offset] = 0;
+      cb1[v][offset] = 0;
+      cb2[v][offset] = 0;
     }
     steps++;
   }
   free(Q);
+  free(q);
 
   double t1 = clock();
   T = (double *)malloc(sizeof(double)*2*m);
@@ -350,14 +420,11 @@ int main(int argc , char *argv[])
   int rot = -1;
 
   fp = fopen(argv[1],"r");
-  double* uo = (double *)malloc(sizeof(double)*m);
-  double* lo = (double *)malloc(sizeof(double)*m);
   double* ubuffer = (double *)malloc(sizeof(double)*1000000);
   double* lbuffer = (double *)malloc(sizeof(double)*1000000);
   int length=0;
   double* buffer = (double *)malloc(sizeof(double)*1000000);
-  while(fscanf(fp,"%lf",&d) != EOF && length <= 5000)
-  {
+  while(fscanf(fp,"%lf",&d) != EOF) {
     buffer[length] = d;
     steps++;
     length++;
@@ -380,16 +447,29 @@ int main(int argc , char *argv[])
       for (int ro = 0; ro < 2*rotationframe+1; ro++) {
         double lbkim = kim(T, C[ro],j, m, mean, std, bsf);
         if (lbkim < bsf) {
-          wedge(C[ro],C[ro], m, r, lo, uo);
-          double lbkeogh= keogh(T, uo, lo, j, m, mean, std, bsf);
+          wedge(C[ro],C[ro], m, r, lo[ro], uo[ro]);
+
+          double lbkeogh = keogh(order[ro], T, uo[ro], lo[ro],cb1[ro], j, m, mean, std, bsf);
           if (lbkeogh < bsf) {
             for(k=0;k<m;k++) {   
               tz[k] = (T[k+j] - mean)/std;
               steps++;
             }
-            double lbkeogh2 = keoghData(tz, C[ro], lbuffer+I, ubuffer+I, m, mean, std, bsf);
+            double lbkeogh2 = keoghData(order[ro], tz, co[ro], lbuffer+I, ubuffer+I,cb2[ro], m, mean, std, bsf);
             if (lbkeogh2 < bsf) {
-              dist = dtw(C[ro],tz,m,r, bsf, &steps);
+              if (lbkeogh > lbkeogh2)
+              {
+                cb[ro][m-1]=cb1[ro][m-1];
+                for(k=m-2; k>=0; k--)
+                  cb[ro][k] = cb[ro][k+1]+cb1[ro][k];
+              }
+              else
+              {
+                cb[ro][m-1]=cb2[ro][m-1];
+                for(k=m-2; k>=0; k--)
+                  cb[ro][k] = cb[ro][k+1]+cb2[ro][k];
+              }
+              dist = dtw(C[ro],tz,cb[ro], m,r, bsf, &steps);
               if(dist < bsf) {
                 rot = rotationframe;
                 bsf = dist;
