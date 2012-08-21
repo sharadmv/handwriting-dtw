@@ -153,7 +153,7 @@ void wedge(double *t, double *t2, int len, int r, double *l, double *u) {
   destroy(&dl);
 }
 
-double kim(double *t, double *q, int j, int len, double mean, double std, double bsf) {
+double kim(double *t, double *q, int j, int len, double mean, double std, double bsf, int* steps) {
 
   /// 1 point at front and back
   double d, lb;
@@ -192,11 +192,12 @@ double kim(double *t, double *q, int j, int len, double mean, double std, double
   d = min(d, dist(y2,q[len-2]));
   d = min(d, dist(y2,q[len-1]));
   lb += d;
+  *steps = *steps + 1;
 
   return lb;
 }
 
-double keogh(int *order, double *t, double *u, double *l,double *cb, int j, int len, double mean, double std, double bsf) {
+double keogh(int *order, double *t, double *u, double *l,double *cb, int j, int len, double mean, double std, double bsf, int* steps) {
   double lb = 0;
   double x, d;
 
@@ -210,11 +211,12 @@ double keogh(int *order, double *t, double *u, double *l,double *cb, int j, int 
       d = dist(x,l[order[i]]);
     lb += d;
     cb[order[i]] = d;
+    *steps = *steps + 1;
   }
   return lb;
 }
 
-double keoghData(int *order, double *tz, double *q,  double *l, double *u, double *cb, int len, double mean, double std, double bsf)
+double keoghData(int *order, double *tz, double *q,  double *l, double *u, double *cb, int len, double mean, double std, double bsf, int* steps)
 {
   double lb = 0;
   double uu,ll,d;
@@ -231,6 +233,7 @@ double keoghData(int *order, double *tz, double *q,  double *l, double *u, doubl
     }
     lb += d;
     cb[order[i]] = d;
+    *steps = *steps + 1;
   }
   return lb;
 }
@@ -379,6 +382,7 @@ int main(int argc , char *argv[])
     cb1[b] = (double *) malloc(sizeof(double)*m);
     cb2[b] = (double *) malloc(sizeof(double)*m);
     order[b] = (int *) malloc(sizeof(double)*m);
+    steps++;
   }
   for (int w = -rotationframe, v = 0; w <= rotationframe; w++, v++) {
     for(i = 0;i < m;i++) {
@@ -396,8 +400,9 @@ int main(int argc , char *argv[])
       cb[v][offset] = 0;
       cb1[v][offset] = 0;
       cb2[v][offset] = 0;
+      steps++;
     }
-    steps++;
+    wedge(C[v],C[v], m, r, lo[v], uo[v]);
   }
   free(Q);
   free(q);
@@ -445,17 +450,16 @@ int main(int argc , char *argv[])
       std = ex2/m;
       std = sqrt(std-mean*mean);
       for (int ro = 0; ro < 2*rotationframe+1; ro++) {
-        double lbkim = kim(T, C[ro],j, m, mean, std, bsf);
+        double lbkim = kim(T, C[ro],j, m, mean, std, bsf, &steps);
         if (lbkim < bsf) {
-          wedge(C[ro],C[ro], m, r, lo[ro], uo[ro]);
 
-          double lbkeogh = keogh(order[ro], T, uo[ro], lo[ro],cb1[ro], j, m, mean, std, bsf);
+          double lbkeogh = keogh(order[ro], T, uo[ro], lo[ro],cb1[ro], j, m, mean, std, bsf, &steps);
           if (lbkeogh < bsf) {
             for(k=0;k<m;k++) {   
               tz[k] = (T[k+j] - mean)/std;
               steps++;
             }
-            double lbkeogh2 = keoghData(order[ro], tz, co[ro], lbuffer+I, ubuffer+I,cb2[ro], m, mean, std, bsf);
+            double lbkeogh2 = keoghData(order[ro], tz, co[ro], lbuffer+I, ubuffer+I,cb2[ro], m, mean, std, bsf, &steps);
             if (lbkeogh2 < bsf) {
               if (lbkeogh > lbkeogh2)
               {
