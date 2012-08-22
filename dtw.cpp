@@ -103,7 +103,7 @@ int empty(struct deque *d)
 }
 
 //Using lemire optimization
-void wedge(double *t, double *t2, int len, int r, double *l, double *u) {
+void wedge(double *t, double *t2, int len, int r, double *l, double *u, int *steps) {
 
   struct deque du, dl;
 
@@ -139,6 +139,7 @@ void wedge(double *t, double *t2, int len, int r, double *l, double *u) {
       pop_front(&du);
     else if (i == 2 * r + 1 + front(&dl))
       pop_front(&dl);
+    *steps = *steps+1;
   }
   for (int i = len; i < len+r+1; i++)
   {
@@ -148,6 +149,7 @@ void wedge(double *t, double *t2, int len, int r, double *l, double *u) {
       pop_front(&du);
     if (i-front(&dl) >= 2 * r + 1)
       pop_front(&dl);
+    *steps = *steps+1;
   }
   destroy(&du);
   destroy(&dl);
@@ -267,10 +269,18 @@ double dtw(double* q, double* d, double *cb, int m, int r, double bsf, int* step
       else {
         y = curr[k-1]; 
       }
-      if ((i-1<0)||(k+1>2*r)) {  x = INF; }
-      else                    {  x = prev[k+1]; }
-      if ((i-1<0)||(j-1<0))   {  z = INF; }
-      else                    {  z = prev[k]; }
+      if ((i-1<0)||(k+1>2*r)) {  
+        x = INF; 
+      }
+      else {  
+        x = prev[k+1]; 
+      }
+      if ((i-1<0)||(j-1<0)) {  
+        z = INF; 
+      }
+      else {  
+        z = prev[k]; 
+      }
       double cost = dist(q[i],d[j])+min(x,min(y,z));
       if (cost < best) {
         best = cost;
@@ -278,10 +288,10 @@ double dtw(double* q, double* d, double *cb, int m, int r, double bsf, int* step
       curr[k] = cost;
       *steps = *steps + 1;
     }
-    if (i+r < m-1 && best /*+cb[i+r+1]*/ >= bsf) {
+    if (i+r < m-1 && best + cb[i+r+1] >= bsf) {
       free(curr);
       free(prev);
-      return best/*+cb[i+r+1]*/;
+      return best+cb[i+r+1];
     }
     temp = curr;
     curr = prev;
@@ -314,9 +324,9 @@ int main(int argc , char *argv[])
     r = floor(R*m);
   else
     r = floor(R);
-  int rotationframe = floor(0.05*m);
+  int rotationframe = 0;//floor(0.05*m);
   if (rotationframe == 0) {
-    rotationframe = 1;
+    rotationframe = 0;
   }
   cout << "Number of rotation frames: " << 2*rotationframe + 1 << " (" << rotationframe << " on each side)\n";
   C = (double **)malloc(sizeof(double*)*(2*rotationframe+1));
@@ -330,6 +340,7 @@ int main(int argc , char *argv[])
   int numlb2 = 0;
   int numdtw = 0;
   int **order = (int **)malloc(sizeof(int)*(2*rotationframe+1));
+  printf("Reading query...\n");
 
   while(fscanf(qp,"%lf",&d) != EOF && i < m)
   {
@@ -339,6 +350,7 @@ int main(int argc , char *argv[])
     i++;
     steps++;
   }
+  printf("Processing query...\n");
 
   fclose(qp);
 
@@ -360,9 +372,7 @@ int main(int argc , char *argv[])
     q[i] = (Q[i] - qmean)/qstd;
   }
 
-  double* u = (double *)malloc(sizeof(double)*m);
-  double* l = (double *)malloc(sizeof(double)*m);
-  wedge(q, q, m, r, l, u);
+  printf("  Sorting query...\n");
   Index *Q_tmp;
   Q_tmp = (Index *)malloc(sizeof(Index)*m);
   /// Sort the query one time by abs(z-norm(q[i]))
@@ -384,26 +394,25 @@ int main(int argc , char *argv[])
     order[b] = (int *) malloc(sizeof(double)*m);
     steps++;
   }
+  printf("  Wedging query...\n");
   for (int w = -rotationframe, v = 0; w <= rotationframe; w++, v++) {
     for(i = 0;i < m;i++) {
-      double znorm = (Q[i] - qmean)/qstd;
       int offset = (w+i)%m;
       if (offset < 0) {
         offset += m;
       }
-      C[v][offset] = znorm;
+      C[v][offset] = q[offset];
       int o = Q_tmp[i].index;
       order[v][offset] = o;
       co[v][offset] = q[o];
-      uo[v][offset] = u[o];
-      lo[v][offset] = l[o];
       cb[v][offset] = 0;
       cb1[v][offset] = 0;
       cb2[v][offset] = 0;
       steps++;
     }
-    wedge(C[v],C[v], m, r, lo[v], uo[v]);
+    wedge(C[v],C[v], m, r, lo[v], uo[v], &steps);
   }
+  free(Q_tmp);
   free(Q);
   free(q);
 
@@ -429,12 +438,15 @@ int main(int argc , char *argv[])
   double* lbuffer = (double *)malloc(sizeof(double)*1000000);
   int length=0;
   double* buffer = (double *)malloc(sizeof(double)*1000000);
+  printf("Reading data...\n");
   while(fscanf(fp,"%lf",&d) != EOF) {
     buffer[length] = d;
     steps++;
     length++;
   }
-  wedge(buffer,buffer, length, r, lbuffer, ubuffer);
+  printf("Wedging data...\n");
+  wedge(buffer,buffer, length, r, lbuffer, ubuffer, &steps);
+  printf("Searching...\n");
   for (i=0;i<length;i++) {
     d = buffer[i];
 
