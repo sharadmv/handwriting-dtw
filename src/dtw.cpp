@@ -5,9 +5,16 @@
 #include <iostream>
 
 #define INF 1e20;
-#define min(x,y) ((x)<(y)?(x):(y))
-#define max(x,y) ((x)>(y)?(x):(y))
-#define dist(x,y) ((x-y)*(x-y))
+
+double min(double x, double y) { 
+  return ((x)<(y)?(x):(y));
+}
+double max(double x, double y) { 
+  return ((x)>(y)?(x):(y));
+}
+double dist(double x, double y) {
+  return ((x-y) * (x-y));
+}
 
 using namespace std;
 
@@ -40,7 +47,8 @@ int comp(const void *a, const void* b)
 }
 
 struct deque
-{   int *dq;
+{   
+  int *dq;
   int size,capacity;
   int f,r;
 };
