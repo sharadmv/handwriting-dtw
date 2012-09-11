@@ -161,6 +161,8 @@ void wedge(vector<double> *t, vector<double> *t2, int len, int r, vector<double>
       (*l)[i-r-1] = max((*t)[dl[0]], (*t2)[dl[0]]);
     }
     if (max((*t)[i],(*t2)[i]) > max((*t)[i-1], (*t2)[i-1])) {
+      printvector(*t);
+      printvector(*t2);
       assert(du.size() > 0);
       du.pop_back();
       int size = du.size();
