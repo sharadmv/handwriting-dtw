@@ -21,7 +21,27 @@ double dist(double x, double y) {
   return (x-y)*(x-y);
 }
 
+void printvector(vector<double> vector, int l) {
+  cout << "[ ";
+  string delimiter = "";
+  for (int a = 0;a < l; a++) {
+    cout << delimiter << vector[a];
+    delimiter = " ";
+  }
+  cout << " ]\n";
+}
+
 void printvector(vector<double> vector) {
+  cout << "[ ";
+  string delimiter = "";
+  for (int a = 0;a < vector.size(); a++) {
+    cout << delimiter << vector[a];
+    delimiter = " ";
+  }
+  cout << " ]\n";
+}
+
+void printvector(vector<int> vector) {
   cout << "[ ";
   string delimiter = "";
   for (int a = 0;a < vector.size(); a++) {
@@ -99,8 +119,8 @@ double dtw(vector<double> *q, vector<double> *d, vector<double> *cb, int m, int 
       curr[k] = cost;
       *steps = *steps + 1;
     }
-    if (i + r < m-1 && best ) { //+ (*cb)[i+r+1] >= bsf) {
-      return best;//+(*cb)[i+r+1];
+    if (i + r < m-1  && (*cb)[i+r+1] >= bsf) {
+      return best+(*cb)[i+r+1];
     }
     temp = curr;
     curr = prev;
@@ -136,6 +156,9 @@ double lb_keogh(vector<int> *order, vector<double> *t, vector<double> *u, vector
   double lb = 0;
   double x, d;
 
+  printvector(*order);
+  printvector(*t);
+
   for (int i = 0; i < len && lb < bsf; i++) {
     x = ((*t)[(*order)[i]+j] - mean) / std;
     d = 0;
@@ -155,27 +178,22 @@ void wedge(vector<double> *t, vector<double> *t2, int len, int r, vector<double>
   deque<double> du, dl;
   du.push_back(0);
   dl.push_back(0);
-  for (int i=1; i < len; i++) {
+  for (int i = 1; i < len; i++) {
     if (i > r) {
       (*u)[i-r-1] = max((*t)[du[0]], (*t2)[du[0]]);
       (*l)[i-r-1] = max((*t)[dl[0]], (*t2)[dl[0]]);
     }
     if (max((*t)[i],(*t2)[i]) > max((*t)[i-1], (*t2)[i-1])) {
-      printvector(*t);
-      printvector(*t2);
       assert(du.size() > 0);
       du.pop_back();
-      int size = du.size();
-      while (size != 0 && max((*t)[i], (*t2)[i]) > max((*t)[size-1],(*t2)[size-1])) {
-        printdeque(du);
+      while (du.size() != 0 && max((*t)[i], (*t2)[i]) > max((*t)[du.size()-1],(*t2)[du.size()-1])) {
         assert(du.size() > 0);
         du.pop_back();
       }
     } else {
       assert(dl.size() > 0);
       dl.pop_back();
-      int size = du.size();
-      while (size != 0 && max((*t)[i], (*t2)[i]) > max((*t)[size-1],(*t2)[size-1])) {
+      while (dl.size() != 0 && max((*t)[i], (*t2)[i]) > max((*t)[dl.size()-1],(*t2)[dl.size()-1])) {
         assert(dl.size() > 0);
         dl.pop_back();
       }
@@ -257,14 +275,20 @@ int main(int argc, char *argv[]) {
   qp = fopen(argv[2], "r");
   dp = fopen(argv[1], "r");
 
+  double window = 1;
+  if (argc > 1) {
+    window = atol(argv[3]);
+  }
+
   vector<double> query, querysort;
   double d;
   fscanf(qp,"%lf",&d);
+  query.push_back(d);
 
   double qsum = d, qsq = 0;
   int counter = 1;
 
-  while(fscanf(qp,"%lf",&d) != EOF) {
+  while(fscanf(qp,"%lf",&d) != EOF && counter < window) {
     query.push_back(d);
     double prev = qsum;
     qsum = prev + (d-qsum)/counter;
@@ -284,12 +308,13 @@ int main(int argc, char *argv[]) {
     }
   }
 
+
   double r = 0.05 * qsize;
   if (argc > 1) {
-    r = atol(argv[3]) * qsize;
+    r = atol(argv[4]) * qsize;
   }
   if (r == 0) {
-    r = 1;
+    r = 3;
   }
 
   vector<double> ql, qu;
@@ -305,7 +330,6 @@ int main(int argc, char *argv[]) {
   int numdtw = 0;
 
 
-  printf("  Sorting query...\n");
 
   vector<index> sorted;
   vector<int> order;
@@ -322,8 +346,8 @@ int main(int argc, char *argv[]) {
     cb2.push_back(0);
     querysort.push_back(0);
   }
-  
-  qsort(&sorted, qsize, sizeof(index), compare);
+
+  qsort(&sorted[0], qsize, sizeof(index), compare);
 
   for (int i = 0; i < qsize; i++) {
     int o = sorted[i].index;
@@ -359,8 +383,9 @@ int main(int argc, char *argv[]) {
   
   wedge(&buffer, &buffer, length, r, &bl, &bu, &steps);
 
-  d = buffer[0];
-  double dsum = d, dsq = 0;
+  double dsum = 0, dsq = 0;
+  double dmean = 0;
+  double dstd = 0;
 
   int offset, actual;
 
@@ -370,11 +395,11 @@ int main(int argc, char *argv[]) {
 
   double distance, location;
 
-  for (int i = 1; i < length; i++) {
+  for (int i = 0; i < length; i++) {
     d = buffer[i]; 
     double prev = dsum;
-    dsum = prev + (d-dsum)/(i+1);
-    dsq = dsq + (d-dsum)*(d-prev); 
+    dsum = dsum + d;
+    dsq = dsq + d*d;
 
     data[i%qsize] = d;
     data[(i%qsize) + qsize] = d;
@@ -383,12 +408,15 @@ int main(int argc, char *argv[]) {
       offset = (i + 1) % qsize;
       actual = i - (qsize - 1);
 
-      double dmean = dsum;
-      double dstd = sqrt(dsq/(qsize-1));
 
+      dmean = dsum/qsize;
+      dstd = dsq/qsize;
+      dstd = sqrt(dstd-dmean*dmean);
       double kim = lb_kim(&data, &query, offset, qsize, dmean, dstd, bsf, &steps);
       if (kim < bsf) {
-        double keogh = lb_keogh(&order, &data, &ql, &qu,&cb1, offset, qsize, dmean, dstd, bsf, &steps);
+        double keogh = lb_keogh(&order, &data, &ql, &qu,&cb1, offset, 
+            qsize, dmean, dstd, bsf, &steps);
+        cout << "KEOGH: " << keogh << endl;
         if (keogh < bsf) {
           for (int j = 0; j < qsize; j++) {
             zdata[j] = (data[j+offset] - dmean)/dstd;
@@ -408,6 +436,7 @@ int main(int argc, char *argv[]) {
               }
             }
             distance = dtw(&query, &zdata, &cb, qsize, r, bsf, &steps);
+            cout << "DISTANCE: " << distance << endl;
             if (distance < bsf) {
               bsf = distance;
               location = i - qsize + 1;
@@ -415,7 +444,8 @@ int main(int argc, char *argv[]) {
           }
         }
       }
-
+      dsum -= data[offset];
+      dsq -= data[offset]*data[offset];
     }
   }
   double end = clock();

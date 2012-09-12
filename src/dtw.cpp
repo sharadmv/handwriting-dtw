@@ -211,6 +211,8 @@ double keogh(int *order, double *t, double *u, double *l,double *cb, int j, int 
   double lb = 0;
   double x, d;
 
+  printarray(order, len);
+  printarray(t, len);
   for (int i = 0; i < len && lb < bsf; i++)
   {
     x = (t[order[i]+j] - mean) / std;
@@ -474,6 +476,7 @@ int main(int argc , char *argv[])
         if (lbkim < bsf) {
 
           double lbkeogh = keogh(order[ro], T, uo[ro], lo[ro],cb1[ro], j, m, mean, std, bsf, &steps);
+          cout << "KEOGH: " << lbkeogh << endl;
           if (lbkeogh < bsf) {
             for(k=0;k<m;k++) {   
               tz[k] = (T[k+j] - mean)/std;
@@ -494,6 +497,7 @@ int main(int argc , char *argv[])
                   cb[ro][k] = cb[ro][k+1]+cb2[ro][k];
               }
               dist = dtw(C[ro],tz,cb[ro], m,r, bsf, &steps);
+              cout << "DISTANCE: " << dist << endl;
               if(dist < bsf) {
                 rot = rotationframe;
                 bsf = dist;

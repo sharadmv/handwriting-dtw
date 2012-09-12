@@ -1,6 +1,7 @@
 default:new
 all:
 	g++ src/dtw.cpp -ggdb -o bin/dtw
+	g++ src/dtw_new.cpp -ggdb -o bin/dtwn
 new:
 	g++ src/dtw_new.cpp -ggdb -o bin/dtwn
 ucr:
