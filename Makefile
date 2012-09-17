@@ -1,9 +1,8 @@
-default:new
+default:all
 all:
 	g++ src/dtw.cpp -ggdb -o bin/dtw
-	g++ src/dtw_new.cpp -ggdb -o bin/dtwn
-new:
-	g++ src/dtw_new.cpp -ggdb -o bin/dtwn
+old:
+	g++ src/dtw_old.cpp -ggdb -o bin/dtwo
 ucr:
 	g++ UCR_DTW.cpp -ggdb -o bin/ucr
 generate:
