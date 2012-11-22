@@ -31,7 +31,7 @@ vector<string> read_train() {
   }
   struct dirent *d;
   while ((d = readdir(dir)) != NULL) {
-    string file = string(d->d_name); 
+    string file = string(d->d_name);
     if (file != "." && file != "..") {
       files.push_back(file);
     }
@@ -49,7 +49,8 @@ int main(int argc, char *argv[]) {
     deque<vector<double> > points;
     double x,y;
     output.open((GEN_DIR+files[i]).c_str());
-    while(fscanf(file,"%lf,%lf ",&x,&y) != EOF) {
+    while(fscanf(file,"%lf,%lf",&x,&y) != EOF) {
+        cout << x << "," << y << endl;
       vector<double> point;
       point.push_back(x);
       point.push_back(y);

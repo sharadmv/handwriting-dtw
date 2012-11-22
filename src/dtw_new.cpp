@@ -11,10 +11,10 @@
 
 using namespace std;
 
-double min(double x, double y) { 
+double min(double x, double y) {
   return x < y ? x : y;
 }
-double max(double x, double y) { 
+double max(double x, double y) {
   return x > y ? x : y;
 }
 double dist(double x, double y) {
@@ -61,7 +61,7 @@ void printdeque(deque<double> deque) {
   cout << " ]\n";
 }
 
-struct Index {   
+struct Index {
   double value;
   int index;
 };
@@ -84,7 +84,7 @@ double dtw(vector<double> *q, vector<double> *d, vector<double> *cb, int m, int 
     prev.push_back(1e20);
   }
 
-  int i,j,k; 
+  int i,j,k;
   double x,y,z;
   double best;
 
@@ -100,17 +100,17 @@ double dtw(vector<double> *q, vector<double> *d, vector<double> *cb, int m, int 
       if ((j - 1 < 0) || (k - 1 < 0)) {
         y = INF;
       } else {
-        y = curr[k-1]; 
+        y = curr[k-1];
       }
-      if ((i - 1 < 0)||(k + 1 > 2*r)) {  
-        x = INF; 
-      } else {  
-        x = prev[k+1]; 
+      if ((i - 1 < 0)||(k + 1 > 2*r)) {
+        x = INF;
+      } else {
+        x = prev[k+1];
       }
-      if ((i - 1 < 0)||(j - 1 < 0)) {  
-        z = INF; 
-      } else {  
-        z = prev[k]; 
+      if ((i - 1 < 0)||(j - 1 < 0)) {
+        z = INF;
+      } else {
+        z = prev[k];
       }
       double cost = dist((*q)[i],(*d)[j])+min(x,min(y,z));
       if (cost < best) {
@@ -139,7 +139,7 @@ double lb_keogh_data(vector<int> *order, vector<double> *tz, vector<double> *q, 
     d = 0;
     if ((*q)[i] > uu) {
       d = dist((*q)[i], uu);
-    } else {   
+    } else {
       if ((*q)[i] < ll) {
         d = dist((*q)[i], ll);
       }
@@ -156,8 +156,6 @@ double lb_keogh(vector<int> *order, vector<double> *t, vector<double> *u, vector
   double lb = 0;
   double x, d;
 
-  printvector(*order);
-  printvector(*t);
 
   for (int i = 0; i < len && lb < bsf; i++) {
     x = ((*t)[(*order)[i]+j] - mean) / std;
@@ -226,7 +224,7 @@ double lb_kim(vector<double> *t, vector<double> *q, int j, int len, double mean,
   double x0 = ((*t)[j] - mean) / std;
   double y0 = ((*t)[(len-1+j)] - mean) / std;
   lb = dist(x0,(*q)[0]) + dist(y0,(*q)[len-1]);
-  if (lb >= bsf) {  
+  if (lb >= bsf) {
     return lb;
   }
 
@@ -234,7 +232,7 @@ double lb_kim(vector<double> *t, vector<double> *q, int j, int len, double mean,
   d = min(dist(x1,(*q)[0]), dist(x0,(*q)[1]));
   d = min(d, dist(x1,(*q)[1]));
   lb += d;
-  if (lb >= bsf) {  
+  if (lb >= bsf) {
     return lb;
   }
 
@@ -242,7 +240,7 @@ double lb_kim(vector<double> *t, vector<double> *q, int j, int len, double mean,
   d = min(dist(y1,(*q)[len-1]), dist(y0, (*q)[len-2]) );
   d = min(d, dist(y1,(*q)[len-2]));
   lb += d;
-  if (lb >= bsf) {  
+  if (lb >= bsf) {
     return lb;
   }
 
@@ -252,7 +250,7 @@ double lb_kim(vector<double> *t, vector<double> *q, int j, int len, double mean,
   d = min(d, dist(x2,(*q)[1]));
   d = min(d, dist(x2,(*q)[0]));
   lb += d;
-  if (lb >= bsf) {   
+  if (lb >= bsf) {
     return lb;
   }
 
@@ -292,7 +290,7 @@ int main(int argc, char *argv[]) {
     query.push_back(d);
     double prev = qsum;
     qsum = prev + (d-qsum)/counter;
-    qsq = qsq + (d-qsum)*(d-prev); 
+    qsq = qsq + (d-qsum)*(d-prev);
     counter++;
   }
 
@@ -380,7 +378,7 @@ int main(int argc, char *argv[]) {
   }
 
   int length = buffer.size();
-  
+
   wedge(&buffer, &buffer, length, r, &bl, &bu, &steps);
 
   double dsum = 0, dsq = 0;
@@ -396,7 +394,7 @@ int main(int argc, char *argv[]) {
   double distance, location;
 
   for (int i = 0; i < length; i++) {
-    d = buffer[i]; 
+    d = buffer[i];
     double prev = dsum;
     dsum = dsum + d;
     dsq = dsq + d*d;
@@ -414,15 +412,14 @@ int main(int argc, char *argv[]) {
       dstd = sqrt(dstd-dmean*dmean);
       double kim = lb_kim(&data, &query, offset, qsize, dmean, dstd, bsf, &steps);
       if (kim < bsf) {
-        double keogh = lb_keogh(&order, &data, &ql, &qu,&cb1, offset, 
+        double keogh = lb_keogh(&order, &data, &ql, &qu,&cb1, offset,
             qsize, dmean, dstd, bsf, &steps);
-        cout << "KEOGH: " << keogh << endl;
         if (keogh < bsf) {
           for (int j = 0; j < qsize; j++) {
             zdata[j] = (data[j+offset] - dmean)/dstd;
             steps++;
           }
-          double keogh2 = lb_keogh_data(&order, &zdata,&querysort, &bl, &bu, &cb2, qsize, dmean, dstd, bsf, &steps); 
+          double keogh2 = lb_keogh_data(&order, &zdata,&querysort, &bl, &bu, &cb2, qsize, dmean, dstd, bsf, &steps);
           if (keogh2 < bsf) {
             if (keogh > keogh2) {
               cb[qsize-1]=cb1[qsize-1];
@@ -436,7 +433,6 @@ int main(int argc, char *argv[]) {
               }
             }
             distance = dtw(&query, &zdata, &cb, qsize, r, bsf, &steps);
-            cout << "DISTANCE: " << distance << endl;
             if (distance < bsf) {
               bsf = distance;
               location = i - qsize + 1;
