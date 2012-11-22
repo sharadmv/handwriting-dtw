@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include<vector>
+#include<cassert>
 #include <iostream>
 #include <dirent.h>
 #include <string>
@@ -107,8 +109,6 @@ int empty(struct deque *d) {
 void wedge(double *t, double *t2, int len, int r, double *l, double *u, int *steps) {
 
     struct deque du, dl;
-
-
     init(&du, 2*r+2);
     init(&dl, 2*r+2);
 
