@@ -1,5 +1,5 @@
 (function() {
-    var numPoints = 100;
+    var numPoints = 300;
     var points = [];
     var pointsToRender = [];
     var time = 0;
@@ -42,12 +42,13 @@
             var r = 255;
             var g = 0;
             var b = 0;
-            var dr = (255 - r)/numPoints;
-            var dg = (255 - g)/numPoints;
-            var db = (255 - b)/numPoints;
+            var length = pointsToRender.length;
+            var dr = (255 - r)/length;
+            var dg = (255 - g)/length;
+            var db = (255 - b)/length;
 
             for (var i = 0; i < pointsToRender.length; i++) {
-                ctx.fillStyle = 'rgb(' + Math.round(r + dr * (numPoints - i)) + ',' + Math.round(g + dg * (numPoints - i)) + ',' + Math.round(b + db * (numPoints - i)) + ')';
+                ctx.fillStyle = 'rgb(' + Math.round(r + dr * (length - i)) + ',' + Math.round(g + dg * (length - i)) + ',' + Math.round(b + db * (length - i)) + ')';
                 ctx.fillRect(pointsToRender[i].x, height - pointsToRender[i].y, 3, 3);
             }
         }
