@@ -3,6 +3,7 @@
     var points = [];
     var pointsToRender = [];
     var time = 0;
+    var recordings = {};
 
     var width = 500;
     var height = 500;
@@ -46,9 +47,7 @@
             var db = (255 - b)/numPoints;
 
             for (var i = 0; i < pointsToRender.length; i++) {
-                ctx.fillStyle = 'rgb(' + Math.round(r + dr * (numPoints - i)) + ','
-                                       + Math.round(g + dg * (numPoints - i)) + ','
-                                       + Math.round(b + db * (numPoints - i)) + ')';
+                ctx.fillStyle = 'rgb(' + Math.round(r + dr * (numPoints - i)) + ',' + Math.round(g + dg * (numPoints - i)) + ',' + Math.round(b + db * (numPoints - i)) + ')';
                 ctx.fillRect(pointsToRender[i].x, height - pointsToRender[i].y, 3, 3);
             }
         }
@@ -57,10 +56,32 @@
             recording = true;
             console.log("Recording")
             points = [];
+            $("#display").text("Recording");
         });
         $("#stop").click(function() {
             recording = false;
-            printPoints(points);
+            $("#display").text("Points recorded: "+points.length);
+            var char = prompt("What character did you record? (case sensitive)");
+            if (!recordings[char]) {
+                recordings[char] = [];
+            }
+            recordings[char].push({ timestamp : new Date().getTime(), points : points});
+            console.log(recordings);
+        });
+        $("#upload").click(function() {
+            for (var char in recordings) {
+                (function(char) {
+                    for (var i in recordings[char]) {
+                        printPoints(recordings[char][i].points)
+                    }
+                    $.ajax({
+                        type: 'POST',
+                        url: 'https://api.mongohq.com/databases/Handwriting/collections/documents?_apiKey=46hlx1ku4j6kg0ndg8j2',
+                        data: recordings[char],
+                        dataType: 'json'
+                    });
+                })(char);
+            }
         });
 
         canvas.addEventListener('mousedown', handleEvent, false);
@@ -69,20 +90,21 @@
     });
 
     var printPoints = function(points) {
-        var str = "x<-c(";
+        var xstr = "x<-c(";
         var delimiter = "";
         for (var i = 0; i < points.length;i++) {
-            str = str + delimiter + points[i].x;
+            xstr = xstr + delimiter + points[i].x;
             delimiter = ",";
         }
-        console.log(str+")")
-        var str = "y<-c(";
+        xstr += ")"
+        var ystr = "y<-c(";
         var delimiter = "";
         for (var i = 0; i < points.length;i++) {
-            str = str + delimiter + points[i].y;
+            ystr = ystr + delimiter + points[i].y;
             delimiter = ",";
         }
-        console.log(str+")")
+        ystr += ")"
+        console.log(xstr+"\n"+ystr)
 
     }
 })();
