@@ -21,7 +21,15 @@
         }
 
         var handleEvent = function(e) {
-            var x = e.clientX, y = e.clientY;
+            var x,y;
+
+            if(e.offsetX) {
+                x = e.offsetX;
+                y = e.offsetY;
+            } else if(e.layerX) {
+                x = e.layerX;
+                y = e.layerY;
+            }
             addPoint(x,height - y);
         }
 
@@ -67,22 +75,14 @@
                 recordings[char] = [];
             }
             recordings[char].push({ timestamp : new Date().getTime(), points : points});
+            recordings.timestamp = new Date().getTime();
             console.log(recordings);
         });
         $("#upload").click(function() {
-            for (var char in recordings) {
-                (function(char) {
-                    for (var i in recordings[char]) {
-                        printPoints(recordings[char][i].points)
-                    }
-                    $.ajax({
-                        type: 'POST',
-                        url: 'https://api.mongohq.com/databases/Handwriting/collections/documents?_apiKey=46hlx1ku4j6kg0ndg8j2',
-                        data: recordings[char],
-                        dataType: 'json'
-                    });
-                })(char);
-            }
+            console.log(recordings)
+            $.post("/upload", JSON.stringify( { document : { "_id" : recordings.timestamp, recordings :recordings}})).success(function () {
+                alert("uploaded successfully!");
+            });
         });
 
         canvas.addEventListener('mousedown', handleEvent, false);
