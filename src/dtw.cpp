@@ -297,7 +297,7 @@ double dtw(double* q, double* d, double *cb, int m, int r, double bsf, int* step
     return ret;
 }
 
-void search(double *query, int m, double *D, double *DU, double *DL, int datalength, double R, double *distance, double *location) {
+void search(double *query, int m, double *D, double *DU, double *DL, int datalength, double R, double *distance, double *location, int debug) {
 
 
     double *Q, *q, *T,**C, **co;
@@ -492,27 +492,29 @@ void search(double *query, int m, double *D, double *DU, double *DL, int datalen
     char end1 = '\n';
     double t2 = clock();
     if (rot != -1) {
-        cout << "Rotation: " << rot << endl;
-        cout << "[ ";
-        for (int a = 0;a < m; a++) {
-            printf("%g ", C[rot][a]*qstd+qmean);
+        if (debug) {
+            cout << "Rotation: " << rot << endl;
+            cout << "[ ";
+            for (int a = 0;a < m; a++) {
+                printf("%g ", C[rot][a]*qstd+qmean);
+            }
+            cout << "]\n";
+            cout << "[ ";
+            for (int a = loc;a < loc+m; a++) {
+                printf("%g ", buffer[a]);
+            }
+            cout << "]\n";
+            cout << "Location : " << loc << endl;
+            cout << "Distance : " << sqrt(bsf) << endl;
+            cout << "Data Scanned : " << i << endl;
+            cout << "Num Steps: " << steps << endl;
+            cout << "Total Execution Time : " << (t2-t1)/CLOCKS_PER_SEC << " sec" << endl;
+            cout << "--------------------------" << endl;
+            cout << "Kim: " << numkim << endl;
+            cout << "Keogh1: " << numlb1 << endl;
+            cout << "Keogh2: " << numlb2<< endl;
+            cout << "DTW: " << numdtw << endl;
         }
-        cout << "]\n";
-        cout << "[ ";
-        for (int a = loc;a < loc+m; a++) {
-            printf("%g ", buffer[a]);
-        }
-        cout << "]\n";
-        cout << "Location : " << loc << endl;
-        cout << "Distance : " << sqrt(bsf) << endl;
-        cout << "Data Scanned : " << i << endl;
-        cout << "Num Steps: " << steps << endl;
-        cout << "Total Execution Time : " << (t2-t1)/CLOCKS_PER_SEC << " sec" << endl;
-        cout << "--------------------------" << endl;
-        cout << "Kim: " << numkim << endl;
-        cout << "Keogh1: " << numlb1 << endl;
-        cout << "Keogh2: " << numlb2<< endl;
-        cout << "DTW: " << numdtw << endl;
         *distance = sqrt(bsf);
         *location = loc;
     } else {
@@ -542,6 +544,7 @@ int main(int argc, char *argv[]) {
     if (r == 0) {
         r = 1;
     }
+    r = 6;
     Q = (double *)malloc(sizeof(double)*m);
 
     fp = fopen(argv[1],"r");
@@ -561,7 +564,6 @@ int main(int argc, char *argv[]) {
 
     printf("Wedging data...\n");
     wedge(buffer, buffer, length, r, lbuffer, ubuffer, &steps);
-    printarray(buffer, length);
 
     fclose(fp);
     double distance, location;
@@ -586,7 +588,7 @@ int main(int argc, char *argv[]) {
                 i++;
             }
             fclose(qp);
-            search(Q, i, buffer, ubuffer, lbuffer, length, r, &distance, &location);
+            search(Q, i, buffer, ubuffer, lbuffer, length, r, &distance, &location, 1);
             cout << "Distance: " << distance << endl;
             cout << "Location: " << location << endl;
         }

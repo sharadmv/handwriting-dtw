@@ -2,19 +2,21 @@ default:all
 all:
 	g++ src/dtw.cpp -ggdb -o bin/dtw
 	g++ src/dtw_new.cpp -ggdb -o bin/dtwn
+	g++ src/UCR_DTW.cpp -ggdb -o bin/ucr
 	rm test/*
 	g++ src/data.cpp -ggdb -o bin/data
 	bin/data
-new:
-	g++ src/dtw_new.cpp -ggdb -o bin/dtwn
-ucr:
-	g++ UCR_DTW.cpp -ggdb -o bin/ucr
 generate:
 	rm gen/*
 	g++ src/train.cpp -ggdb -o bin/train
 	bin/train
-
 test:
 	rm test/*
 	g++ src/data.cpp -ggdb -o bin/data
 	bin/data
+plot_gen:
+	python scripts/plot_gen.py ${ARGS}
+plot_train:
+	python scripts/plot_train.py ${ARGS}
+get_data:
+	python scripts/get_data.py
