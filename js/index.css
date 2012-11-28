@@ -1,3 +1,23 @@
+#main {
+}
+#content {
+    width : 100%;
+    text-align: center;
+}
+#control {
+    clear : both;
+    width : 100%;
+    text-align: center;
+}
 #canvas {
+    width : 500px;
+    height : 500px;
     border: 1px black solid;
+    float : left;
+}
+#preview {
+    width : 250px;
+    height : 250px;
+    border: 1px black solid;
+    float : left;
 }

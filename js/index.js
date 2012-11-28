@@ -5,8 +5,17 @@
     var time = 0;
     var recordings = {};
 
-    var width = 500;
-    var height = 500;
+    var width = {
+        canvas : 500,
+        preview : 250
+    }
+
+    var height = {
+        canvas : 500,
+        preview : 250
+    }
+
+    var name;
 
     var Point = function(x, y) {
         this.x = x;
@@ -15,9 +24,18 @@
     var recording = false;
 
     $(document).ready(function() {
-        var canvas = document.getElementById('canvas');
-        if (canvas.getContext) {
-            var ctx = canvas.getContext("2d");
+        //name = prompt("Enter your name (lowercase, no spaces):");
+        name = 'sharad';
+        var canvas = {
+            "canvas" : document.getElementById('canvas'),
+            "preview" : document.getElementById('preview')
+        };
+        var context = {};
+        for (var i in canvas) {
+            if (canvas[i].getContext) {
+                var ctx = canvas[i].getContext("2d");
+                context[i] = ctx;
+            }
         }
 
         var handleEvent = function(e) {
@@ -30,7 +48,7 @@
                 x = e.layerX;
                 y = e.layerY;
             }
-            addPoint(x,height - y);
+            addPoint(x,height['canvas'] - y);
         }
 
         var addPoint = function(x,y) {
@@ -42,22 +60,32 @@
                 pointsToRender.shift()
             }
             time++;
-            render();
+            render('canvas', true, pointsToRender);
         }
 
-        var render = function() {
-            ctx.clearRect(0,0,500,500);
+        var render = function(cv, fade, ptr) {
+            if (fade === undefined) {
+                fade = true;
+            }
+            context[cv].clearRect(0,0,width[cv],height[cv]);
             var r = 255;
             var g = 0;
             var b = 0;
-            var length = pointsToRender.length;
-            var dr = (255 - r)/length;
-            var dg = (255 - g)/length;
-            var db = (255 - b)/length;
+            var length = ptr.length;
+            if (fade) {
+                var dr = (255 - r)/length;
+                var dg = (255 - g)/length;
+                var db = (255 - b)/length;
+            } else {
+                var dr = 0
+                var dg = 0
+                var db = 0
+            }
 
-            for (var i = 0; i < pointsToRender.length; i++) {
-                ctx.fillStyle = 'rgb(' + Math.round(r + dr * (length - i)) + ',' + Math.round(g + dg * (length - i)) + ',' + Math.round(b + db * (length - i)) + ')';
-                ctx.fillRect(pointsToRender[i].x, height - pointsToRender[i].y, 3, 3);
+            for (var i = 0; i < ptr.length; i++) {
+                var point = { x : Math.floor(ptr[i].x / width['canvas'] * width[cv]), y : Math.floor(ptr[i].y / height['canvas'] * height[cv]) }
+                context[cv].fillStyle = 'rgb(' + Math.round(r + dr * (length - i)) + ',' + Math.round(g + dg * (length - i)) + ',' + Math.round(b + db * (length - i)) + ')';
+                context[cv].fillRect(Math.floor(point.x), Math.floor(height[cv] - point.y), 3, 3);
             }
         }
 
@@ -74,20 +102,20 @@
             if (!recordings[char]) {
                 recordings[char] = [];
             }
-            recordings[char].push({ timestamp : new Date().getTime(), points : points});
+            render("preview", false, points);
             recordings.timestamp = new Date().getTime();
             console.log(recordings);
         });
         $("#upload").click(function() {
             console.log(recordings)
-            $.post("/upload", JSON.stringify( { document : { "_id" : recordings.timestamp, recordings :recordings}})).success(function () {
+            $.post("/upload", JSON.stringify( { document : { "_id" : name+"-"+recordings.timestamp, recordings :recordings}})).success(function () {
                 alert("uploaded successfully!");
             });
         });
 
-        canvas.addEventListener('mousedown', handleEvent, false);
-        canvas.addEventListener('mousemove', handleEvent, false);
-        canvas.addEventListener('mouseup',   handleEvent, false);
+        canvas['canvas'].addEventListener('mousedown', handleEvent, false);
+        canvas['canvas'].addEventListener('mousemove', handleEvent, false);
+        canvas['canvas'].addEventListener('mouseup',   handleEvent, false);
     });
 
     var printPoints = function(points) {

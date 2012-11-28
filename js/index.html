@@ -5,13 +5,17 @@
         <script type='text/javascript' src='index.js'></script>
     </head>
     <body>
-        <center>
-            <canvas id="canvas" width="500" height="500"></canvas>
-            <br/>
-            <button id='record' value='record'>Record</button>
-            <button id='stop' value='stop'>Stop</button>
-            <button id='upload' value='update'>Upload</button>
-            <div id='display'></div>
-        </center>
+        <div id='main'>
+            <div id='content'>
+                <canvas width="500px" height="500px" id="canvas"></canvas>
+                <canvas width="250px" height="250px" id="preview"></canvas>
+            </div>
+            <div id='control'>
+                <button id='record' value='record'>Record</button>
+                <button id='stop' value='stop'>Stop</button>
+                <button id='upload' value='update'>Upload</button>
+                <div id='display'></div>
+            </div>
+        </div>
     </body>
 </html>
