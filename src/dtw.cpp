@@ -1,12 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <time.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+#include<time.h>
 #include<vector>
 #include<cassert>
-#include <iostream>
-#include <dirent.h>
-#include <string>
+#include<iostream>
+#include<dirent.h>
+#include<string>
+#include<algorithm>
 
 using namespace std;
 
@@ -43,8 +44,20 @@ typedef struct index {
     int    index;
 } index;
 
-int compare(const void *x, const void* y) {
-    return abs(( (index*) x)->value) - abs(( (index*) y)->value);   // high to low
+typedef struct dist_comp {
+    double value;
+    string letter;
+} dist_comp;
+
+void printdistcomp(vector<dist_comp> v) {
+    for (int a = 0;a < v.size(); a++) {
+        string s = v[a].letter+" = %lf\n";
+        printf(s.c_str(),v[a].value);
+    }
+}
+
+bool compareDistance(const dist_comp &a, const dist_comp &b) {
+    return a.value < b.value;
 }
 
 typedef struct deque {
@@ -52,6 +65,11 @@ typedef struct deque {
     int size,capacity;
     int f,r;
 } deque;
+
+int compareIndex(const void *x, const void* y) {
+    return fabs(( (index*) x)->value) - fabs(( (index*) y)->value);   // high to low
+}
+
 
 void init(deque *d, int capacity) {
     d->capacity = capacity;
@@ -311,7 +329,9 @@ void search(double *query, int m, double *D, double *DU, double *DL, int datalen
     if (rotationframe == 0) {
         rotationframe = 0;
     }
+    if (debug) {
     cout << "Number of rotation frames: " << 2*rotationframe + 1 << " (" << rotationframe << " on each side)\n";
+    }
     C = (double **)malloc(sizeof(double*)*(2*rotationframe+1));
     co = (double **)malloc(sizeof(double*)*(2*rotationframe+1));
     int i = 0, j;
@@ -334,7 +354,9 @@ void search(double *query, int m, double *D, double *DU, double *DL, int datalen
     int numdtw = 0;
     int **order = (int **)malloc(sizeof(int)*(2*rotationframe+1));
 
-    printf("Processing query...\n");
+    if (debug) {
+        printf("Processing query...\n");
+    }
 
     double qmean = ex/m;
     double qstd = ex2/m;
@@ -354,7 +376,8 @@ void search(double *query, int m, double *D, double *DU, double *DL, int datalen
         q[i] = (Q[i] - qmean)/qstd;
     }
 
-    printf("  Sorting query...\n");
+    if (debug)
+        printf("  Sorting query...\n");
     index *Q_tmp;
     Q_tmp = (index*) malloc(sizeof(index)*m);
 
@@ -363,7 +386,7 @@ void search(double *query, int m, double *D, double *DU, double *DL, int datalen
         Q_tmp[i].index = i;
     }
 
-    qsort(Q_tmp, m, sizeof(index), compare);
+    qsort(Q_tmp, m, sizeof(index), compareIndex);
     for (int b = 0; b < 2*rotationframe+1; b++) {
         C[b] = (double *) malloc(sizeof(double)*m);
         co[b] = (double *) malloc(sizeof(double)*m);
@@ -375,7 +398,8 @@ void search(double *query, int m, double *D, double *DU, double *DL, int datalen
         order[b] = (int *) malloc(sizeof(double)*m);
         steps++;
     }
-    printf("  Wedging query...\n");
+    if (debug)
+        printf("  Wedging query...\n");
 
     for (int w = -rotationframe, v = 0; w <= rotationframe; w++, v++) {
         for(i = 0;i < m;i++) {
@@ -420,10 +444,13 @@ void search(double *query, int m, double *D, double *DU, double *DL, int datalen
     int length=datalength;
     double* buffer = D;
 
-    printf("Wedging data...\n");
-    printf("Length: %d, R: %d\n",length, steps);
+    if (debug) {
+        printf("Wedging data...\n");
+        printf("Length: %d, R: %d\n",length, steps);
+    }
     wedge(buffer, buffer, length, r, lbuffer, ubuffer, &steps);
-    printf("Searching...\n");
+    if (debug)
+        printf("Searching...\n");
 
     for (i = 0; i < length; i++) {
         d = buffer[i];
@@ -518,7 +545,8 @@ void search(double *query, int m, double *D, double *DU, double *DL, int datalen
         *distance = sqrt(bsf);
         *location = loc;
     } else {
-        cout << "No match found\n";
+        if (debug)
+            cout << "No match found\n";
         *distance = -1;
         *location = -1;
     }
@@ -551,7 +579,9 @@ int main(int argc, char *argv[]) {
     double d;
 
 
-    printf("Reading data...\n");
+    int start = clock();
+
+    //printf("Reading data...\n");
     double* buffer = (double *)malloc(sizeof(double)*1000000);
     int length = 0;
     int steps = 0;
@@ -562,13 +592,13 @@ int main(int argc, char *argv[]) {
     double* ubuffer = (double *)malloc(sizeof(double)*1000000);
     double* lbuffer = (double *)malloc(sizeof(double)*1000000);
 
-    printf("Wedging data...\n");
+    //printf("Wedging data...\n");
     wedge(buffer, buffer, length, r, lbuffer, ubuffer, &steps);
 
     fclose(fp);
     double distance, location;
     qp = fopen(argv[2],"r");
-    printf("Reading query...\n");
+    //printf("Reading query...\n");
 
     string trainDir = "gen/";
 
@@ -576,23 +606,30 @@ int main(int argc, char *argv[]) {
 
     struct dirent *entry = NULL;
 
+    vector<dist_comp> distances;
     while((entry = readdir(mydir))) {
-        printf("%s\n", entry->d_name);
+        //printf("%s\n", entry->d_name);
         int i = 0;
         string tmp = entry->d_name;
         if (tmp != "." && tmp != "..") {
-            cout << "SUP: "<< trainDir+tmp << endl;
             qp = fopen((trainDir+tmp).c_str(),"r");
             while(fscanf(qp,"%lf",&d) != EOF && i < m) {
                 Q[i] = d;
                 i++;
             }
             fclose(qp);
-            search(Q, i, buffer, ubuffer, lbuffer, length, r, &distance, &location, 1);
-            cout << "Distance: " << distance << endl;
-            cout << "Location: " << location << endl;
+            search(Q, i, buffer, ubuffer, lbuffer, length, r, &distance, &location, false);
+            dist_comp d;
+            d.letter = entry->d_name;
+            d.value = distance;
+            distances.push_back(d);
+            //cout << "Distance: " << distance << endl;
+            //cout << "Location: " << location << endl;
         }
     }
+    sort(distances.begin(), distances.end(), compareDistance);
+    printdistcomp(distances);
+    cout << "Total Execution Time : " << (clock()-start)/CLOCKS_PER_SEC << " sec" << endl;
     free(buffer);
     closedir(mydir);
 }
