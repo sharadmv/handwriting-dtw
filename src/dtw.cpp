@@ -8,6 +8,8 @@
 #include<dirent.h>
 #include<string>
 #include<algorithm>
+#include<iostream>
+#include<fstream>
 
 using namespace std;
 
@@ -51,7 +53,7 @@ typedef struct dist_comp {
 
 void printdistcomp(vector<dist_comp> v) {
     for (int a = 0;a < v.size(); a++) {
-        string s = v[a].letter+" = %lf\n";
+        string s = a+": "+v[a].letter+" = %lf\n";
         printf(s.c_str(),v[a].value);
     }
 }
@@ -216,8 +218,7 @@ double keogh(int *order, double *t, double *u, double *l,double *cb, int j, int 
     double lb = 0;
     double x, d;
 
-    for (int i = 0; i < len && lb < bsf; i++)
-    {
+    for (int i = 0; i < len && lb < bsf; i++) {
         x = (t[order[i]+j] - mean) / std;
         d = 0;
         if (x > u[order[i]])

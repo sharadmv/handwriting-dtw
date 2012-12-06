@@ -15,8 +15,10 @@ fontP.set_size('small')
 
 def main(argv):
     args = process_args(argv)
-    #letters = ["train/sharad-1354095773516/"+x+"-0" for x in args]
-    letters = ["train/sharad-1354108307274/"+x+"-0" for x in args]
+    #letters = ["train/sharad-new/"+x for x in args]
+    letters = ["comp/"+x for x in args]
+    #letters = ["data_train/"+x for x in args]
+    #letters = ["train/lei-1354774953143/"+x for x in args]
     to_plot = []
 
     plot = plt.subplot(1,1,1)
