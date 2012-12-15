@@ -1,0 +1,111 @@
+\documentclass{chi-ext}
+% Please be sure that you have the dependencies (i.e., additional LaTeX packages) to compile this example.
+% See http://personales.upv.es/luileito/chiext/
+
+\copyrightinfo{
+  Copyright is held by the author/owner(s).\\
+  \emph{CHI'13}, April 27 -- May 2, 2013, Paris, France.\\
+  ACM 978-1-XXXX-XXXX-X/XX/XX.\\
+}
+
+\title{Handwriting in the air, Recognizing on the fly}
+
+\numberofauthors{3}
+% Notice how author names are alternately typesetted to appear ordered in 2-column format;
+% i.e., the first 4 autors on the first column and the other 4 auhors on the second column.
+% Actually, it's up to you to strictly adhere to this author notation.
+\author{
+  \alignauthor{
+  	\textbf{Sharad Vikram}\\
+  	\affaddr{Computer Science Division}\\
+  	\affaddr{UC Berkeley}\\
+  	\email{}
+  }\alignauthor{
+  	\textbf{Lei Li}\\
+  	\affaddr{Computer Science Division}\\
+  	\affaddr{UC Berkeley}\\
+  	\email{leili@cs.berkeley.edu}
+  }
+  \alignauthor{
+    	\textbf{Stuart Russell}\\
+    	\affaddr{Computer Science Division}\\
+    	\affaddr{UC Berkeley}\\
+    	\email{russell@cs.berkeley.edu}
+    }
+}
+
+\teaser{
+  \includegraphics[width=\columnwidth]{FIG/sample.jpg}
+  \caption{put our image about leap motion}
+  \label{fig:teaser}
+}
+
+% Paper metadata (use plain text, for PDF inclusion and later re-using, if desired)
+\def\plaintitle{Handwriting in the air, Recognizing on the fly}
+\def\plainauthor{Sharad Vikram}
+\def\plainkeywords{handwriting recognition, time series, dynamic time wraping}
+\def\plaingeneralterms{}
+
+\hypersetup{
+  % Your metadata go here
+  pdftitle={\plaintitle},
+  pdfauthor={\plainauthor},  
+  pdfkeywords={\plainkeywords},
+  pdfsubject={\plaingeneralterms},
+  % Quick access to color overriding:
+  citecolor=black,
+  linkcolor=blue,
+  menucolor=black,
+  urlcolor=blue,
+}
+
+\usepackage{graphicx}   % for EPS use the graphics package instead
+\usepackage{balance}    % useful for balancing the last columns
+\usepackage{bibspacing} % save vertical space in references
+
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\input{000abstract.tex}
+\end{abstract}
+
+\keywords{\plainkeywords}
+%\textcolor{red}{Mandatory section to be included in your final version.}
+
+\category{H.5.m}{Information interfaces and presentation (e.g., HCI)}{Miscellaneous}. 
+%See \cite{ACMCCS} 
+%See: \url{http://www.acm.org/about/class/1998/} 
+%\textcolor{red}{Mandatory section to be included in your final version.}
+
+%\terms{\plaingeneralterms}
+%\textcolor{red}{Optional section to be included in your final version.}
+
+
+% =============================================================================
+\section{Introduction}
+\input{010intro.tex}
+
+\section{Related Work}
+\input{020related.tex}
+
+\section{Proposed approach}
+\input{030proposed.tex}
+
+
+\section{Experiments}
+\input{040experiments.tex}
+
+\section{Conclusion and future work}
+\input{050conclusion.tex}
+
+
+
+\balance
+\bibliographystyle{acm-sigchi}
+\bibliography{BIB/leiliref}
+
+\end{document}
