@@ -24,8 +24,8 @@
     var recording = false;
 
     $(document).ready(function() {
-        //name = prompt("Enter your name (lowercase, no spaces):");
-        name = 'sharad';
+        name = prompt("Enter your name (lowercase, no spaces):");
+        //name = 'sharad';
         var canvas = {
             "canvas" : document.getElementById('canvas'),
             "preview" : document.getElementById('preview')
@@ -50,6 +50,14 @@
             }
             addPoint(x,height['canvas'] - y);
         }
+	leap.on('frame', function(id, data) {
+ 	    var hands = data.hands;
+	    if (hands[0].fingers[0]) {
+		var point = hands[0].fingers[0].tip.position.slice(0,2);
+		point = { x : point[0]+250, y : point[1]+100 };
+		addPoint(point.x, point.y);
+	    }
+	});
 
         var addPoint = function(x,y) {
             var point = new Point(x,y);
@@ -90,21 +98,29 @@
         }
 
         $("#record").click(function() {
-            recording = true;
-            console.log("Recording")
-            points = [];
-            $("#display").text("Recording");
+	    if (!recording) {
+		recording = true;
+		console.log("Recording")
+		points = [];
+		$("#display").text("Recording");
+		$("#record").text("Stop");
+	    } else {
+		recording = false;
+		$("#display").text("Points recorded: "+points.length);
+	        render("preview", false, points);
+		var char = prompt("What character did you record? (case sensitive)");
+		if (char) {
+		    if (!recordings[char]) {
+		       recordings[char] = [];
+		    }
+		    render("preview", false, points);
+		    recordings.timestamp = new Date().getTime();
+		    recordings[char].push(points);
+		}
+		$("#record").text("Record");
+	    }
         });
         $("#stop").click(function() {
-            recording = false;
-            $("#display").text("Points recorded: "+points.length);
-            var char = prompt("What character did you record? (case sensitive)");
-            if (!recordings[char]) {
-                recordings[char] = [];
-            }
-            render("preview", false, points);
-            recordings.timestamp = new Date().getTime();
-            console.log(recordings);
         });
         $("#upload").click(function() {
             console.log(recordings)

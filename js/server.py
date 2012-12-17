@@ -1,4 +1,3 @@
-from pymongo import Connection
 from bottle import request, route, run, template, post, static_file
 import requests
 import urllib2
