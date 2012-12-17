@@ -1,0 +1,144 @@
+% shorthands for naming conventions
+\newcommand{\question}[1]{{\emph{#1}}}
+\newcommand{\ksa}{K\_softAND}
+\newcommand{\myK}{k}
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\bit}{\begin{itemize}}
+\newcommand{\eit}{\end{itemize}}
+\newcommand{\goal}[1]{ {\noindent {$\Rightarrow$} \em {#1} } }
+\newcommand{\hide}[1]{}
+%\newcommand{\comment}[1]{ {\footnotesize {#1} } }
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+%\newtheorem{proof}{Proof}
+\newtheorem{defn}{Definition}
+\newtheorem{algo}{Algorithm}
+\newtheorem{observation}{Observation}
+% macro symbol definitions
+\newcommand{\reminder}[1]{{\bf *** #1 ***}}
+\newcommand{\prop}{{\em{CEPS}}}       % name for the proposed method
+\newcommand{\propfull}{{{center-piece}}}       % full name for the proposed method
+\newcommand{\pmetric}{\emph{meeting probability}}%name for the proposed goodness score
+\newcommand{\ssp}{\emph{steady-state probability}}%name for steady-state probability
+\newcommand{\extract}{\emph{EXTRACT}}%name for the extract algorithm
+\newcommand{\lqu}{``}%left double quatation
+\newcommand{\rqu}{''}%right double quatation
+%\newcommand{\modul1}{\tt{IndividualScoreCalculation}}       % name for the Individual Score Calculation
+%\newcommand{\modul2}{\tt{Combination}}       % name for the combination
+%\newcommand{\modul3}{\tt{EXTRACT}}       % name for the dynamic programming
+\newcommand{\qi}{q_i}  %index for a single query node i
+\newcommand{\pd}{pd}  %promising node
+\newcommand{\QN}{{Q}}       % count of query nodes
+\newcommand{\Qset}{{\cal Q}}    % set of query nodes
+\newcommand{\Qsetm}{{\cal \acute{Q}}}    % set of query nodes, not including the last query node
+\newcommand{\Qsetzero}{{\cal \varnothing}}    % null set of query nodes, not including the last query node
+\newcommand{\collision}{r}  % so that we can change it, to say,
+                %        r-endezvous, or m-eeting
+\newcommand{\cij}{ \collision_{i,j}}    % collision probability
+\newcommand{\cijpar}{ \collision{(i,j)}} % collision probability, also
+\newcommand{\cqj}{ \collision ( \Qset, j)} % group collision probability
+\newcommand{\cqjK}{ \collision ( \Qset, j, \myK)} % group collision probability
+\newcommand{\cqjQ}{ \collision ( \Qset, j, \QN)} % group collision probability for AND query
+\newcommand{\cqjone}{ \collision ( \Qset, j, 1)} % group collision probability for OR query
+\newcommand{\cqHK}{ \collision ( \Qset, \Hgraph, \myK)} % score for matrix H, for k-and query
+\newcommand{\Hgraph}{ { \cal H}} % the connection subgraph
+\newcommand{\mat}[1]{{\bf #1}}   % matrix: bold
+\newcommand{\matC}{ \mat{R}} % the collision/rendezvous matrix
+\newcommand{\matW}{ \mat{W}} % the weight matrix
+\newcommand{\matP}{ \mat{P}} % the transition matrix
+\newcommand{\matS}{ \mat{S}} % the graph Laplacian
+\newcommand{\matD}{ \mat{D}} % the degree matrix
+\newcommand{\matQ}{ \mat{Q}} % the system matrix
+\newcommand{\matWnorm}{ \tilde{\mat{W}}} % the weight matrix
+\newcommand{\matWnorma}{\tilde{{\mat{W}}}_{1}} % within partition matrix;
+\newcommand{\matWnormai}{\tilde{{\mat{W}}}_{1,i}} % within partition matrix;
+\newcommand{\matWnormb}{\tilde{{\mat{W}}}_{2}} % cross partition matrix;
+\newcommand{\myB}{\mat{U}} % node-concept matrix;
+\newcommand{\myC}{\mat{S}} % concept-concept matrix;
+\newcommand{\myD}{\mat{V}} % concept-node matrix;
+\newcommand{\FastRWR}{B\_LIN} % Abbreveate for proposed method;
+\newcommand{\SimFastRWR}{NB\_LIN} % Abbreveate for simplified proposed method;
+\newcommand{\FastBitRWR}{bNB\_LIN} % Abbreveate for simplified proposed method for bipartite;
+
+%abbr. for the dataset
+\newcommand{\CorelFive}{Co5000} % Abbreveate for Corel 5000 image Dataset
+\newcommand{\CorelMMG}{CoMMG} % Abbreveate for Corel 52,000 image Dataset for cross-media correlation discovery
+\newcommand{\DblpAp}{AP} % Abbreveate for DBLP Author-paper Dataset
+\newcommand{\DblpAc}{AC} % Abbreveate for DBLP Author-conference Dataset
+
+\newcommand{\edge}{ {(j,l)}}    % an edge
+\newcommand{\cqedge}{ \collision ( \Qset, \edge)} % score for matrix H, for k-and query
+\newcommand{\cqedgeK}{ \collision ( \Qset, \edge, \myK)} % score for matrix H, for k-and query
+\newcommand{\ciedge}{ \collision ( i, \edge)} % score for matrix H, for k-and query
+
+\newcommand{\unitvi}{ \vec{e}_i} % unit vector, with all zeros except at i
+
+
+
+
+
+
+
+% dataset shorthands:
+
+%mocap
+\newcommand{\xseq}{\mathcal{X}}
+\newcommand{\yseq}{\mathcal{Y}}
+\newcommand{\wseq}{\mathcal{W}}
+\newcommand{\zseq}{\mathcal{Z}}
+\newcommand{\durx}{\mathrm{T}}
+\newcommand{\dims}{m} % dimensionality - m = 93 here
+\newcommand{\tgap}{\Delta t}
+
+
+\newcommand{\myvec}[1]{{\mathbf #1}}
+%\newcommand{\mymat}[1]{{\mathbf #1}}
+
+\newcommand{\expect}[1]{\mathbb{E}[#1]}
+\newcommand{\expectprob}[2]{\mathbb{E}_{#1}[#2]}
+
+\newcommand{\dnorm}[2]{\mathcal{N}(#1, #2)}
+
+
+
+% \newcommand{\method}{{XRayView}}
+\newcommand{\xrv}{{\bf XRV}}
+\newcommand{\rmse}{MSE}
+\newcommand{\method}{{\bf DynaMMo}}
+\newcommand{\msvd}{MSVD}
+
+% % for dynamic tensor system
+\newcommand{\E}{E_{z\mid x,\theta}}
+\newcommand{\var}{\textup{var}}
+\newcommand{\cov}{\textup{cov}}
+\newcommand{\norm}[1]{\left\vert\left\vert #1\right\vert\right\vert}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\T}{\textup{T}}
+%\newcommand{\Ez}[1]{\E_{z\mid x,\theta}\left[ #1 \right]}
+\newcommand{\tucker}[1]{\left[\hspace{-1 mm}\left[ #1 \right]\hspace{-1 mm}\right]}
+\newcommand{\gauss}[1]{\mathcal{N}\left(#1\right)}
+\newcommand{\vectorize}{\mathbf{vec}}
+\newcommand{\vect}{\vectorize}
+\newcommand{\vecm}{\vectorize^{(m)}}
+\newcommand{\vecmat}[1]{\vectorize^{(#1)}}
+\newcommand{\tr}{\textup{tr}}
+\newcommand{\determinant}[1]{\left\vert #1 \right\vert}
+\newcommand{\cond}[2]{\left. #1 \right\vert #2}
+%\newcommand{\i2s}[2]{\left[ #1 \gets #2 \right]}
+%\newcommand{\s2i}[2]{\left[ #1 \to #2 \right]}
+\newcommand{\grada}{\partial_{A_{ij}^{(m)}}}
+\newcommand{\gradc}{\partial_{C_{ij}^{(m)}}}
+\newcommand{\tn}[1]{\mathcal{TN}\left(#1\right)}
+\newcommand{\mymat}[6]{\left(\begin{array}{ccc}
+#1 & #2 & #3\\
+#4 & #5 & #6\\
+\end{array}\right)}
+\newcommand{\mycases}[4]{\left\lbrace\begin{array}{cl}
+#1 & #2 \\
+#3 & #4 \\
+\end{array}\right.}
+\newcommand{\Am}{A^{(m)}}
+\newcommand{\Cm}{C^{(m)}}
+\newcommand{\A}{\mathcal{A}_m}
+\newcommand{\C}{\mathcal{C}_m}

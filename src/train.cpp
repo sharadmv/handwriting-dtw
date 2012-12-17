@@ -9,7 +9,7 @@
 
 using namespace std;
 
-const string TRAIN_DIR = "train/";
+const string TRAIN_DIR = "train/sharad-1354095773516/";
 const string GEN_DIR = "gen/";
 
 void error(int code) {
@@ -41,16 +41,22 @@ vector<string> read_train() {
 
 int main(int argc, char *argv[]) {
   vector<string> files = read_train();
-  FILE* file;
-  ofstream output;
+  FILE *file;
+  ofstream output, plot;
+  string plt = "gen_scripts/plot.plt";
+  plot.open(plt.c_str());
+  plot << "set t wxt persist" << endl;
+  plot << "plot ";
+  string delimiter = "";
   for (int i = 0; i < files.size(); i++) {
     cout << "Reading...: " << TRAIN_DIR + files[i] << "\n";
     file = fopen((TRAIN_DIR+files[i]).c_str(), "r");
     deque<vector<double> > points;
     double x,y;
+    plot << delimiter << "'gen/"+files[i]+"' with lines";
+    delimiter = ", \\\n";
     output.open((GEN_DIR+files[i]).c_str());
-    while(fscanf(file,"%lf,%lf",&x,&y) != EOF) {
-        cout << x << "," << y << endl;
+    while(fscanf(file,"%lf %lf",&x,&y) != EOF) {
       vector<double> point;
       point.push_back(x);
       point.push_back(y);
@@ -74,5 +80,6 @@ int main(int argc, char *argv[]) {
     cout << "Outputting: " << GEN_DIR + files[i] << endl;
     output.close();
   }
+  plot.close();
   return 0;
 }
