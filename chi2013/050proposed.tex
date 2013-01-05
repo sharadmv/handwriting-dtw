@@ -2,7 +2,7 @@ The proposed algorithm to identify characters in real time is a dynamic time war
 We are given a data time series, \(D\), and a collection of candidate time series, \( C = \{c_1, c_2, c_3, ..., c_n\}\).
 Each time series is multivariate in that each element of the time series is a 3D point, \(\{x_i, y_i\}\)
 The first goal is to have some sort of similarity search algorithm.
-\begin{algorithm}[H]
+\begin{algorithm}[h]
  \SetKwData{Best}{best}
  \SetKwData{Location}{location}
  \SetKwData{Distance}{distance}
@@ -26,7 +26,7 @@ The first goal is to have some sort of similarity search algorithm.
 \end{algorithm}
 
 The similarity search will consist of a sweep across the data time series, checking every subsequence against the candidate and returning the best match.
-\begin{algorithm}[H]
+\begin{algorithm}[h]
  \SetKwData{Best}{best}
  \SetKwData{Location}{location}
  \SetKwData{Distance}{distance}
