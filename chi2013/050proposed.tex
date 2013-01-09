@@ -33,12 +33,13 @@ The first goal is to have some sort of similarity search algorithm.
 
  \Input{\Collection, \D}
  \Output{Matches of all the candidates to \D}
- \Best$\leftarrow -\infty$\;
+ Distances$\leftarrow$\{\};\\
  \For{\C in \Collection}{
     \Distance, \Location$\leftarrow$\Search{\C, \D}\;
+    Distances[\C]$\leftarrow$(\Distance,\Location);
  }
- \Return{\Distance, \Location}
- \caption{Database search algorithm}
+ \Return{Distances}
+ \caption{High level database search algorithm}
 \end{algorithm}
 
 The similarity search will consist of a sweep across the data time series, checking every subsequence against the candidate and returning the best match.
