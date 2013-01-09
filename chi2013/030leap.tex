@@ -12,7 +12,7 @@ It then determines the location of fingers within the field of view, the angle o
 }
 
 This paper only uses the finger  and tool position data taken from the LEAP motion. The LEAP can capture these finger points at approximately 100 fps using USB 2.0 port or about 150 using a USB 3.0 port.
-The importance of this type of input devices is that when the user is writing, there is no explicit "beginning" and "end" of writing. There is no predefined gesture that defines when writing characters begins and ends. Instead, this input device would require that the entire stream of data points be searched for instances of letters. 
+The importance of this type of input device is that when the user is writing, there is no explicit "beginning" and "end" of input. There is no predefined gesture that defines when writing characters starts and stops. Instead, this input device would require that the entire stream of data points be searched for instances of letters and only when it can find no matches does it assume that writing is not happening.
 \begin{figure}
   \begin{center}
   \includegraphics[width=\columnwidth]{images/he-3d-2.PNG}
