@@ -54,3 +54,11 @@ The similarity search will consist of a sweep across the data time series, check
 
 The dynamic time warping algorithm is used as a similarity metric between vectors. It is a generalization of the Euclidean distance metric but chooses the closest point within a certain time window, rather than creating a one-to-one mapping of points. When the time window is 0, DTW reduces to Euclidean distance.
 
+\begin{figure}
+  \begin{center}
+  \includegraphics[width=2in]{images/dtw-raw.PNG}
+  \includegraphics[width=2in]{images/dtw-window.PNG}
+  \caption{Two vectors aligned with 1) Euclidean and 2) time warping}
+  \label{fig:teaser}
+  \end{center}  
+\end{figure}
