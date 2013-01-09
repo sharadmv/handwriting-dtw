@@ -13,3 +13,5 @@ Using LB Keogh on the subsequence in addition to the query
 Sorting the normalized query to abandon earlier when calculating LB Keogh
 \end{enumerate}
 A key difference in the proposed method and the UCR Suite is that the UCR Suite was implemented for a univariate time series. Thus, to implement these optimizations, the lower bounding measures had to be extended to a trivariate time series ${x,y,z}$.~\cite{rath2002lower-bounding}
+
+We can also speed up the process by parallelizing the similarity search.
