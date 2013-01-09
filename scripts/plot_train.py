@@ -26,11 +26,11 @@ def main(argv):
         data = np.loadtxt(letters[i],delimiter=" ");
         x = [point[0] for point in data]
         y = [point[1] for point in data]
-        plot.plot(x,y, label=args[i])
+        plot.plot(x,y, label=args[i],linewidth=8)
 
-    plot.legend(shadow=True,fancybox=True,loc='upper center',bbox_to_anchor=(0.5,-0.1),ncol=4)
+    #plot.legend(shadow=True,fancybox=True,loc='upper center',bbox_to_anchor=(0.5,-0.1),ncol=4)
     plot.set_aspect('1.0')
-    subplots_adjust(bottom=0.25)   # <--
+    #subplots_adjust(bottom=0.25)   # <--
     plt.draw()
     plt.show()
 
