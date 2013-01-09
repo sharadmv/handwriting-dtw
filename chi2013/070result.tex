@@ -10,7 +10,7 @@
 \end{figure}
 }
 
-We have done preliminary tests on the algorithm. Using database sizes of 30 and 168, with DTW windows of 0,1, 5, and 10, we have done the similarity searches, getting one-nearest-neighbour matches for each candidate in the database.
+Preliminary tests on the algorithm have been run. Using database sizes of 30 and 168, with DTW windows of 0,1, 5, and 10, we have done the similarity searches, getting one-nearest-neighbour matches for each candidate in the database.
 \\
 \begin{table}
 \begin{tabular}{ cc|c|c| }
@@ -29,7 +29,7 @@ We have done preliminary tests on the algorithm. Using database sizes of 30 and 
 \caption{Times of non-parallelized similarity search with data length 785}
 \end{table}
 
-An example test time series we tried matching was the word "new," taken from The Gettysburg Address. The "new" time series is of length 492 and we ran it with a DTW window of 0. It took 1.02 seconds.
+An example test time series was the word "new," taken from The Gettysburg Address. The "new" time series is of length 492 and we ran it with a DTW window of 0. It took 1.02 seconds.
 \\
 \begin{figure}
     \includegraphics[width=\columnwidth]{images/new-1.png}
