@@ -1,7 +1,8 @@
 default:all
 all:
 	#g++ src/dtw.cpp -ggdb -o bin/dtw
-	g++ src/dtw2d.cpp -ggdb -o bin/dtw2d -fopenmp
+	#g++ src/dtw2d.cpp -ggdb -o bin/dtw2d -fopenmp
+	g++ src/dtw2d.cpp -ggdb -o bin/dtw2d
 	#g++ src/dtw_new.cpp -ggdb -o bin/dtwn
 	#g++ src/UCR_DTW.cpp -ggdb -o bin/ucr
 	#g++ src/normalize.cpp -ggdb -o bin/normalize
