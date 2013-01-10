@@ -12,8 +12,10 @@
 }
 
 Preliminary tests on the algorithm have been run. Using database sizes of 30 and 168 recordings, with DTW windows of 0, 1, 5, and 10, similarity searches have been run, getting one-nearest-neighbour matches for each candidate in the database.
-\\
+
 \begin{table}
+\begin{center}
+\caption{Times of non-parallelized similarity search with data length 785}
 \begin{tabular}{ cc|c|c| }
 \cline{3-4}
 & & \multicolumn{2}{ c| }{Database Size} \\ \cline{3-4}
@@ -27,7 +29,7 @@ Preliminary tests on the algorithm have been run. Using database sizes of 30 and
 \multicolumn{1}{ |c  }{}                        &
 \multicolumn{1}{ |c| }{10} & 2.16s & 9.81s \\ \cline{1-4} 
 \end{tabular}
-\caption{Times of non-parallelized similarity search with data length 785}
+\end{center}
 \end{table}
 
 An example test time series was the word "new," taken from The Gettysburg Address. The "new" time series is of length 492 and we ran it with a DTW window of 0. It took 1.02 seconds.
