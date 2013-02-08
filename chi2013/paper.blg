@@ -1,0 +1,47 @@
+This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
+The top-level auxiliary file: paper.aux
+The style file: acm-sigchi.bst
+Database file #1: BIB/leiliref.bib
+Warning--empty journal in rath2002lower-bounding
+You've used 8 entries,
+            2243 wiz_defined-function locations,
+            577 strings with 5512 characters,
+and the built_in function-call counts, 3263 in all, are:
+= -- 323
+> -- 146
+< -- 0
++ -- 61
+- -- 52
+* -- 255
+:= -- 507
+add.period$ -- 23
+call.type$ -- 8
+change.case$ -- 50
+chr.to.int$ -- 0
+cite$ -- 9
+duplicate$ -- 114
+empty$ -- 257
+format.name$ -- 52
+if$ -- 701
+int.to.chr$ -- 0
+int.to.str$ -- 8
+missing$ -- 8
+newline$ -- 42
+num.names$ -- 16
+pop$ -- 50
+preamble$ -- 1
+purify$ -- 42
+quote$ -- 0
+skip$ -- 89
+stack$ -- 0
+substring$ -- 261
+swap$ -- 35
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 32
+warning$ -- 1
+while$ -- 29
+width$ -- 9
+write$ -- 82
+(There was 1 warning)
