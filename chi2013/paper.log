@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.1.4)  9 JAN 2013 17:00
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.1.4)  16 FEB 2013 18:03
 entering extended mode
  %&-line parsing enabled.
 **paper.tex
@@ -508,10 +508,10 @@ See the caption package documentation for explanation.
 ) (./080conclusion.tex [5 <./images/new-n-match-cropped.png> <./images/new-e-ma
 tch-cropped.png> <./images/new-w-match-cropped.png> <./images/new-1.png>])
 (./090acknowledgements.tex) (./paper.bbl)
-Overfull \vbox (2.5pt too high) has occurred while \output is active []
+Overfull \vbox (2.22223pt too high) has occurred while \output is active []
 
- [6]
-(./paper.aux)
+
+[6] (./paper.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
@@ -536,7 +536,7 @@ onts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texmf-texlive/fonts/type
 msfonts/cm/cmssi9.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/
 cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
 </usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.pfb>
-Output written on paper.pdf (6 pages, 2546497 bytes).
+Output written on paper.pdf (6 pages, 2546663 bytes).
 PDF statistics:
  205 PDF objects out of 1000 (max. 8388607)
  57 named destinations out of 1000 (max. 500000)
