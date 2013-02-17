@@ -1,21 +1,11 @@
-\marginpar{
-\vspace{-4in}
-\begin{figure}
-  \begin{center}
-  \includegraphics[width=1.5in]{images/new-n-match-cropped.png}
-  \includegraphics[width=1.5in]{images/new-e-match-cropped.png}
-  \includegraphics[width=1.5in]{images/new-w-match-cropped.png}
-  \caption{The "n", "e", and "w" matches for the "new" time series. Candidates are in green and subsequences from the data are in blue.} \label{fig12}
-  \label{fig:teaser}
-  \end{center}  
-\end{figure}
-}
 
-Preliminary tests on the algorithm have been run. Using database sizes of 30 and 168 recordings, with DTW windows of 0, 1, 5, and 10, similarity searches have been run, getting one-nearest-neighbour matches for each candidate in the database.
 
+Preliminary tests on the algorithm have been run. Using database sizes of 30 and 168 recordings, with DTW windows of 0, 1, 5, and 10, similarity searches have been run, getting one-nearest-neighbor matches for each candidate in the database.
 \begin{table}
 \begin{center}
-\caption{Times of non-parallelized similarity search with data length 495 (the word "new")}
+\caption{Running time of plain similarity search with data length 495 (the word "new").
+\label{tab:time}
+}
 \begin{tabular}{ cc|c|c| }
 \cline{3-4}
 & & \multicolumn{2}{ c| }{Database Size} \\ \cline{3-4}
@@ -32,13 +22,12 @@ Preliminary tests on the algorithm have been run. Using database sizes of 30 and
 \end{center}
 \end{table}
 
-An example test time series was the word "new," taken from The Gettysburg Address. In this query, we were looking for the closest database matches to "new" and their locations. The "new" time series is of length 492 and we ran it with a DTW window of 0. It took 1.02 seconds.
-\\
+Figure~\ref{fig:new-sequence} shows an example test time series of the word "new," taken from The Gettysburg Address. In this query, we were looking for the closest database matches to "new" and their locations. The "new" time series is of length 492 and we ran it with a DTW window of 0. It took 1.02 seconds (Table~\ref{tab:time}). The matches for "n", "e", and "w" are pictured in the left margin (Figure~\ref{fig:n-e-w}).
+
 \begin{figure}
     \includegraphics[width=\columnwidth]{images/new-1.png}
-    \caption{The "new" time series data}
-    \label{fig:teaser}
+    \caption{The "new" character time series.}
+    \label{fig:new-sequence}
 \end{figure}
 
-The matches for "n", "e", and "w" are pictured in the left margin.
-\\
+

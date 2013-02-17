@@ -2,14 +2,22 @@
 % Please be sure that you have the dependencies (i.e., additional LaTeX packages) to compile this example.
 % See http://personales.upv.es/luileito/chiext/
 
-\copyrightinfo{
-    Copyright is held by the author/owner(s).\\
-        \emph{CHI'13}, April 27 -- May 2, 2013, Paris, France.\\
-        ACM 978-1-XXXX-XXXX-X/XX/XX.\\
-}
-\usepackage{algorithm2e}
+
+
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{mdwlist}
 \usepackage{multirow}
 \usepackage{subfigure}
+
+\usepackage{graphicx}   % for EPS use the graphics package instead
+\usepackage{balance}    % useful for balancing the last columns
+\usepackage{bibspacing} % save vertical space in references
+
+
+\copyrightinfo{
+Copyright is held by the author/owner(s).\\
+\emph{CHI 2013 Extended Abstracts}, April 27--May 2, 2013, Paris, France.\\
+ACM 978-1-4503-1952-2/13/04.}
 
 \title{Handwriting and Gestures in the Air, Recognizing on the Fly}
 
@@ -41,14 +49,14 @@
 
 \teaser{
     \includegraphics[width=\columnwidth]{images/hand-white.PNG}
-    \caption{The Leap Motion in use}
-    \label{fig:teaser}
+    \caption{Finger trajectory tracked by Leap Motion controller.}
+    \label{fig:fingers}
 }
 
 % Paper metadata (use plain text, for PDF inclusion and later re-using, if desired)
     \def\plaintitle{Handwriting in the air, Recognizing on the fly}
     \def\plainauthor{Sharad Vikram}
-    \def\plainkeywords{handwriting recognition, time series, dynamic time warping}
+    \def\plainkeywords{handwriting recognition, hand gesture, time series, dynamic time warping}
     \def\plaingeneralterms{Human factors}
 
     \hypersetup{
@@ -64,9 +72,7 @@
             urlcolor=blue,
     }
 
-\usepackage{graphicx}   % for EPS use the graphics package instead
-\usepackage{balance}    % useful for balancing the last columns
-\usepackage{bibspacing} % save vertical space in references
+
 
 
 
@@ -115,7 +121,7 @@
 \section{Conclusion and future work}
 \input{080conclusion.tex}
 
-\section{Acknowledgements}
+\section{Acknowledgment}
 \input{090acknowledgements.tex}
 
 
