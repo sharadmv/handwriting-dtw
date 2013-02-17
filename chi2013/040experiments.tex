@@ -1,18 +1,16 @@
 The dataset to be collected consists of two parts.
-The first is candidate time series. The candidates consist of the letters of the alphabet, written in both uppercase and lowercase. Each letter will be replicated five times, for a total of 260 recordings per person. Around 100 people will participate in the instrument for a total of 26000 recordings.
-The second part is data time series. The data time series are words to be tested. These words will be taken from Lincoln's Gettsyburg Address: "Four score and seven years ago our fathers brought forth on this continent, a new nation, conceived in Liberty, and dedicated to the proposition that all men are created equal." Each word will be recorded individually. This will also be replicated by 100 people, for a total of 3000 recordings.
-\\[1\baselineskip]
+The first is character candidate dataset. The candidates consist of the letters of the alphabet, written in both uppercase and lowercase. Each letter will be replicated five times, for a total of 260 recordings per person. Around 100 people will participate in the instrument for a total of 26000 recordings.
+The second part is data time series. The data time series are words to be tested. These words will be taken from a standard corpus, for example, Lincoln's Gettsyburg Address: ``Four score and seven years ago our fathers brought forth on this continent, a new nation, conceived in Liberty, and dedicated to the proposition that all men are created equal.'' Each word will be recorded individually. 
+This will also be replicated by 100 people, for a total of 3000 recordings.
 Thus, the total size of the dataset will be 29000 recordings.
-
-The data will be recorded with the LEAP Motion, using a browser application. 
+The data will be recorded with the Leap Motion controller, using a browser application. 
 
 \begin{figure}
-  \begin{center}
+  \centering
   \includegraphics[width=2in]{images/recording-1-cropped.PNG}
-  \caption{The data recording apparatus}
-  \label{fig:teaser}
-  \end{center}  
+  \caption{The data recording apparatus.}
+  \label{fig:recording-ui}
 \end{figure}
 
-The browser application shows a 2D preview of the data being recorded and prompts users to confirm the character or word they just wrote.
-After the user has finished recording, the data will be uploaded, so at this stage, the user requires an internet connection.
+The browser application shows a 2D preview of the data being recorded and prompts users to confirm the character or word they just wrote (Figure~\ref{fig:recording-ui}).
+After the user has finished recording, the data will be uploaded to our server through Internet.

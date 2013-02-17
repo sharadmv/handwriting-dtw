@@ -1,22 +1,21 @@
-Data will be recorded with the LEAP Motion device, a commercial technology that captures precise data about the hands.
-The LEAP Motion plugs into computers via USB and sends information about any hands it sees in its field of view, which is a cone of about 8 cubic feet above it.
-It then determines the location of fingers within the field of view, the angle of the hand, the existence and position of any "tools," such as pens or pencils, and an approximation of the curvature of the palm.
 \marginpar{
 \begin{figure}
-  \begin{center}
   \includegraphics[width=1.8in]{images/leap.jpg}
-  \caption{A basic view of the LEAP Motion}
-  \label{fig:teaser}
-  \end{center}  
+  \caption{A basic view of the Leap Motion controller.}
+  \label{fig:leapmotion}  
 \end{figure}
 }
 
-This paper only uses the finger  and tool position data taken from the LEAP Motion. The LEAP can capture these finger points at approximately 100 fps using USB 2.0 port or about 150 using a USB 3.0 port.
-The importance of this type of input device is that when the user is writing, there is no explicit "beginning" and "end" of input. There is no predefined gesture that indicates when writing characters starts and stops. Instead, the use of this input device requires that the entire stream of data points be searched for instances of letters and only when no matches are found can it be determined that writing has stopped.
+Data will be recorded with the Leap Motion controller (Figure~\ref{fig:leapmotion}), a commercial technology that captures precise data about the hands.
+The Leap Motion plugs into computers via USB and sends information about any hands it sees in its field of view, which is a cone of about 8 cubic feet above it.
+It then determines the location of fingers within the field of view, the angle of the hand, the existence and position of any "tools," such as pens or pencils, and an approximation of the curvature of the palm.
+
+This paper only uses the finger and tool position data taken from the Leap Motion. The Leap can capture these finger points at approximately 100 fps using USB 2.0 port or about 150 using a USB 3.0 port.
+The importance of this type of input device is that when the user is writing, there is no explicit "beginning" and "end" of input. There is no predefined gesture that indicates when writing characters starts and stops (Figure~\ref{fig:writing-he}). Instead, the use of this input device requires that the entire stream of data points be searched for instances of letters and only when no matches are found can it be determined that writing has stopped.
+
 \begin{figure}
-  \begin{center}
-  \includegraphics[width=\columnwidth]{images/he-white.PNG}
-  \caption{The visualizer for the LEAP Motion with a finger writing "he"}
-  \label{fig:teaser}
-  \end{center}  
+\centering
+  \includegraphics[width=2.5in]{images/he-white.PNG}
+  \caption{Writing "he" using Leap Motion controller. The captured data are shown in Figure \ref{fig:he}.}
+  \label{fig:writing-he}
 \end{figure}
