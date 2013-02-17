@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.1.4)  16 FEB 2013 18:03
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.1.4)  16 FEB 2013 18:55
 entering extended mode
  %&-line parsing enabled.
 **paper.tex
@@ -450,29 +450,29 @@ File: images/dtw-window.PNG Graphic file (type png)
  <use images/dtw-window.PNG>
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 16.
+(caption)                particular \caption on input line 17.
 See the caption package documentation for explanation.
 
 
-Overfull \hbox (6.66666pt too wide) in paragraph at lines 16--16
+Overfull \hbox (6.66666pt too wide) in paragraph at lines 17--17
  [] 
  []
 
 
-Overfull \hbox (6.66666pt too wide) in paragraph at lines 16--16
+Overfull \hbox (6.66666pt too wide) in paragraph at lines 17--17
  [][] 
  []
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 18.
+(Font)              <7> on input line 19.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 18.
+(Font)              <5> on input line 19.
 
 LaTeX Font Warning: Font shape `OT1/cmss/m/it' in size <10> not available
-(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 40.
+(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 41.
 
 Package hyperref Info: bookmark level for unknown algocf defaults to 0 on input
- line 42.
+ line 43.
 ) (./060optimizations.tex [4 <./images/recording-1-cropped.PNG> <./images/dtw-r
 aw.PNG (PNG copy)> <./images/dtw-window.PNG (PNG copy)>]) (./070result.tex
 <images/new-n-match-cropped.png, id=121, 690.9012pt x 523.2348pt>
@@ -508,7 +508,7 @@ See the caption package documentation for explanation.
 ) (./080conclusion.tex [5 <./images/new-n-match-cropped.png> <./images/new-e-ma
 tch-cropped.png> <./images/new-w-match-cropped.png> <./images/new-1.png>])
 (./090acknowledgements.tex) (./paper.bbl)
-Overfull \vbox (2.22223pt too high) has occurred while \output is active []
+Overfull \vbox (1.22223pt too high) has occurred while \output is active []
 
 
 [6] (./paper.aux)
@@ -523,7 +523,7 @@ Here is how much of TeX's memory you used:
  9960 multiletter control sequences out of 15000+50000
  9328 words of font info for 28 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 45i,14n,42p,1154b,467s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 45i,14n,42p,1378b,467s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
 ve/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/ty
 pe1/public/amsfonts/cm/cmmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/a
@@ -536,7 +536,7 @@ onts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texmf-texlive/fonts/type
 msfonts/cm/cmssi9.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/
 cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
 </usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.pfb>
-Output written on paper.pdf (6 pages, 2546663 bytes).
+Output written on paper.pdf (6 pages, 2546904 bytes).
 PDF statistics:
  205 PDF objects out of 1000 (max. 8388607)
  57 named destinations out of 1000 (max. 500000)
