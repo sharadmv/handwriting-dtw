@@ -1,0 +1,162 @@
+------------------------ Submission 356, Review 4 ------------------------
+
+Title: Writing and Sketching in the Air, Recognizing and Controlling on the Fly
+
+Reviewer:           primary
+
+Overall Meta Rating
+
+   4 - Possibly Accept: I would argue for accepting this submission.
+
+Expertise
+
+   3  (Knowledgeable)
+
+The Meta-Review
+
+   This authors present a new type of user input for writing. They use an
+   existing/commercial motion device, which is designed to capture precise
+   data about human hands, to collect finger data. Then, they identify
+   characters and words that are written in the air. This proposed solution
+   can be considered a new concept. The authors propose a data-based
+   similarity search algorithm using dynamic time warping (with
+   optimization) to perform matching.
+
+   - One of the concerns of the reviewers is that there is not enough
+   information to understand how the work is different, at its current
+   state, from pen up/down gestures.
+
+   - It is also perceived that snippets of time data series are fed into the
+   algorithm but is not clear how the snippets would (in practice) be
+   separated from a continuous stream of data.
+
+   - It is not clear what is the content of the data used for the presented
+   results.
+
+   - There seems to be a mistake in the calculation of the size of the
+   database. There are 30 words on the snippet of Lincoln's address, times
+   100 people comes to 3000, not 30000 (unless the authors mean the complete
+   address, which is not clearly stated).
+
+   - In general the paper is very well written and the number of individuals
+   contributing to dataset and samples provided by each individual is
+   sufficiently large.
+
+   - While the application indicated in the paper appears to track 2D hand
+   gestures used to “write” characters very well, replicating keyboard &
+   mouse functionality using hand gestures will require tracking in three
+   dimensions. The authors should describe how the third dimension will
+   increase complexity and processing times. This could be applied to sign
+   language as well to assist computer interactions with disabled persons.
+
+   - The poster is clear and simple to understand. The design is not
+   particularly exciting but does the job well.
+
+Associate Chairs' Additional Comments
+
+
+Formatting and style problems
+
+
+
+------------------------ Submission 356, Review 1 ------------------------
+
+Title: Writing and Sketching in the Air, Recognizing and Controlling on the Fly
+
+Reviewer:           external
+
+Overall Rating
+
+   3 - Neutral: Overall I would not argue for accepting or rejecting this submission.
+
+Expertise
+
+   3  (Knowledgeable)
+
+General Comments on the Extended Abstract
+
+   The abstract is very well put together. No mention of specific computer
+   vision device. The novelty of this paper is inherent in the tracking
+   device. Paper would be better if more comparison between character
+   recognition schemes done.
+
+Design of Poster
+
+   5 - Excellent design
+
+Comments on the Design of the Poster
+
+   Very nice colors and headings used. Good balance of images and words.
+
+
+------------------------ Submission 356, Review 2 ------------------------
+
+Title: Writing and Sketching in the Air, Recognizing and Controlling on the Fly
+
+Reviewer:           external
+
+Overall Rating
+
+   2 - Possibly Reject: The submission is weak and probably shouldn't be accepted, but there is some chance it should get in.
+
+Expertise
+
+   3  (Knowledgeable)
+
+General Comments on the Extended Abstract
+
+   There is not enough information to understand how the work is different,
+   at its current state, from pen up/down gestures. It seems to me that
+   snippets of time data series are fed into the algorithm but is not clear
+   to me how the snippets would in practice be separated from a continuous
+   stream of data. It is not clear what was the content of the data used for
+   the presented results. Finally there seems to be a mistake in the
+   calculation of the size of the database. There are 30 words on the
+   snippet of Lincoln's address, times 100 people comes to 3000, not 30000.
+   (unless you meant the complete address, which is not clearly stated).
+
+Design of Poster
+
+   4
+
+Comments on the Design of the Poster
+
+   The poster is clear. The design is not particularly exciting but does the
+   job well.
+
+
+------------------------ Submission 356, Review 3 ------------------------
+
+Title: Writing and Sketching in the Air, Recognizing and Controlling on the Fly
+
+Reviewer:           external
+
+Overall Rating
+
+   5 - Strong Accept: I would argue strongly for accepting this submission.
+
+Expertise
+
+   4  (Expert )
+
+General Comments on the Extended Abstract
+
+   Very well written, highly relevant topic
+
+   Number of individuals contributing to dataset and samples provided by
+   each individual sufficiently large
+
+   While the application indicated in the paper appears to track 2D hand
+   gestures used to “write” characters very well, replicating keyboard &
+   mouse functionality using hand gestures will require tracking in three
+   dimensions. The authors should describe how the third dimension will
+   increase complexity and processing times. This could be applied to sign
+   language as well to assist computer interactions with disabled persons.
+
+Design of Poster
+
+   5 - Excellent design
+
+Comments on the Design of the Poster
+
+   Simple to understand, not too busy.
